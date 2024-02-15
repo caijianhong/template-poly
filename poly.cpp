@@ -99,7 +99,7 @@ struct poly : vector<mint> {
   poly getDev() const;
   poly getLn(int lim) const;
   poly getExp(int lim) const;
-  poly qpow(LL k, int lim) const;
+  poly qpow(mint k, modint<mint::mod - 1> k0, int lim) const;
 };
 void print(const poly& a) {
   for (size_t i = 0; i < a.size(); i++) debug("%d, ", raw(a[i]));
@@ -206,9 +206,8 @@ poly operator*(const poly& a, const poly& b) {
   int len = glim(rlen);
   if (1ull * a.size() * b.size() <= 1ull * len * bitctz(len)) {
     poly ret(rlen);
-    for (size_t i = 0; i < a.size(); i++) 
-      for (size_t j = 0; j < b.size(); j++)
-        ret[i + j] += a[i] * b[j];
+    for (size_t i = 0; i < a.size(); i++)
+      for (size_t j = 0; j < b.size(); j++) ret[i + j] += a[i] * b[j];
     return ret;
   } else {
     return concalc(len, {a, b},
@@ -236,12 +235,12 @@ poly getInt(poly a) {
   return a;
 }
 poly poly::getInt() const { return ::getInt(*this); }
-poly getLn(poly a, int lim) {
+poly getLn(const poly& a, int lim) {
   assert(a[0] == 1);
   return getInt(getDev(a) * getInv(a, lim)).cut(lim);
 }
 poly poly::getLn(int lim) const { return ::getLn(*this, lim); }
-poly getExp(poly a, int lim) {
+poly getExp(const poly& a, int lim) {
   assert(a[0] == 0);
   poly b{1};
   for (int len = 2; len <= glim(lim); len <<= 1) {
@@ -253,13 +252,17 @@ poly getExp(poly a, int lim) {
   return b.cut(lim);
 }
 poly poly::getExp(int lim) const { return ::getExp(*this, lim); }
-poly qpow(poly a, LL k, int lim) {
+poly qpow(const poly& a, mint k, modint<mint::mod - 1> k0, int lim) {
   size_t i = 0;
   while (i < a.size() && a[i] == 0) i += 1;
-  if (i == a.size()) return {};
-  return getExp(getLn(a / a[i] >> i, lim) * k, lim) * a[i] << i;
+  if (i == a.size() || 1ull * i * raw(k) > 1ull * lim) return {};
+  lim -= i * raw(k);
+  return getExp(getLn(a / a[i] >> i, lim) * k, lim) * qpow(a[i], raw(k0))
+         << i * raw(k);
 }
-poly poly::qpow(LL k, int lim) const { return ::qpow(*this, k, lim); }
+poly poly::qpow(mint k, modint<mint::mod - 1> k0, int lim) const {
+  return ::qpow(*this, k, k0, lim);
+}
 template <class T>
 mint divide_at(poly f, poly g, T n) {
   for (; n; n >>= 1) {
@@ -333,4 +336,3 @@ poly lagrange(const vector<pair<mint, mint>>& a) {
   }
   return ans;
 }
-

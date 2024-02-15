@@ -30,6 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Test files
+/test/main.cpp
 main
 
 # Vim files
