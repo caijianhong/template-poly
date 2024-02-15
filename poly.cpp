@@ -96,7 +96,7 @@ struct poly : vector<mint> {
   poly getInv(int len) const;
   poly cut(int lim) const;
   poly getInt() const;
-  poly getDir() const;
+  poly getDev() const;
   poly getLn(int lim) const;
   poly getExp(int lim) const;
   poly qpow(LL k, int lim) const;
@@ -155,7 +155,7 @@ poly concalc(int n, vector<poly> vec,
   int lim = glim(n);
   int m = vec.size();
   for (auto& f : vec) f.resize(lim), f.ntt(1);
-  vector<mint> tmp;
+  vector<mint> tmp(m);
   poly ret(lim);
   for (int i = 0; i < lim; i++) {
     for (int j = 0; j < m; j++) tmp[j] = vec[j][i];
@@ -226,12 +226,12 @@ poly operator*(const mint& k, poly a) { return a *= k; }
 poly operator/(poly a, const mint& k) { return a /= k; }
 poly operator<<(poly a, const int& k) { return a <<= k; }
 poly operator>>(poly a, const int& k) { return a >>= k; }
-poly getDir(poly a) {
+poly getDev(poly a) {
   a >>= 1;
   for (int i = 1; i < a.size(); i++) a[i] *= i + 1;
   return a;
 }
-poly poly::getDir() const { return ::getDir(*this); }
+poly poly::getDev() const { return ::getDev(*this); }
 poly getInt(poly a) {
   a <<= 1;
   for (int i = 1; i < a.size(); i++) a[i] /= i;
@@ -239,7 +239,8 @@ poly getInt(poly a) {
 }
 poly poly::getInt() const { return ::getInt(*this); }
 poly getLn(poly a, int lim) {
-  return assert(a[1] == 1), a.getInv(lim - 1).getInt();
+  assert(a[0] == 1);
+  return getInt(getDev(a) * getInv(a, lim)).cut(lim);
 }
 poly poly::getLn(int lim) const { return ::getLn(*this, lim); }
 poly getExp(poly a, int lim) {
@@ -255,7 +256,10 @@ poly getExp(poly a, int lim) {
 }
 poly poly::getExp(int lim) const { return ::getExp(*this, lim); }
 poly qpow(poly a, LL k, int lim) {
-  return getExp(getLn(a / a[0], lim) * k, lim) * a[0];
+  int i = 0;
+  while (i < a.size() && a[i] == 0) i += 1;
+  if (i == a.size()) return {};
+  return getExp(getLn(a / a[i] >> i, lim) * k, lim) * a[i] << i;
 }
 poly poly::qpow(LL k, int lim) const { return ::qpow(*this, k, lim); }
 template <class T>
@@ -331,16 +335,27 @@ poly lagrange(const vector<pair<mint, mint>>& a) {
   }
   return ans;
 }
-int main() {
-#ifndef LOCAL
-  cin.tie(nullptr)->sync_with_stdio(false);
-#endif
+void TestMultiple() {
   int n, m;
   cin >> n >> m;
-  vector<mint> a(n + 1), b(m + 1);
+  poly a(n + 1), b(m + 1);
   for (auto& x : a) cin >> x;
   for (auto& x : b) cin >> x;
   for (auto x : a* b) cout << x << " ";
   cout << endl;
+}
+void TestGetLn() {
+  int n;
+  cin >> n;
+  poly a(n);
+  for (auto& x : a) cin >> x;
+  for (auto x : a.getLn(n)) cout << x << " ";
+  cout << endl;
+}
+int main() {
+#ifndef LOCAL
+  cin.tie(nullptr)->sync_with_stdio(false);
+#endif
+  TestGetLn();
   return 0;
 }
