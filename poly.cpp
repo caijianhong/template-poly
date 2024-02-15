@@ -305,7 +305,8 @@ mint sqrt(const mint& c) {
       if (b & 1) r = mul(r, a);
     return r;
   };
-  return qpow({a, 1}, (mint::mod + 1) >> 1).first;
+  mint ret = qpow({a, 1}, (mint::mod + 1) >> 1).first;
+  return min(raw(ret), raw(-ret));
 }
 poly getSqrt(const poly& a, int lim) {
   poly b{sqrt(a[0])};

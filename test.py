@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import os, sys
 module = input("module name: ").strip()
-os.system(f"clang-format -i ./poly.cpp")
 with open(f"./test/main.cpp", "w") as file:
     file.write(open(f"./poly.cpp", "r").read() + open(f"./test/{module}.cpp").read())
 if os.system(f"g++ ./test/main.cpp -o main -O2 -fsanitize=undefined,address -Wall -std=c++14"):
