@@ -102,6 +102,21 @@ void print(const poly& a) {
   for (size_t i = 0; i < a.size(); i++) debug("%d, ", raw(a[i]));
   debug("\n");
 }
+istream& operator>>(istream& is, poly& a) {
+  for (auto& x : a) is >> x;
+  return is;
+}
+ostream& operator<<(ostream& os, const poly& a) {
+  bool flag = false;
+  for (auto& x : a) {
+    if (flag)
+      os << " ";
+    else
+      flag = true;
+    os << x;
+  }
+  return os;
+}
 mint poly::operator()(const mint& x) const {
   const auto& a = *this;
   mint res = 0;

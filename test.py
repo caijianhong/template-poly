@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import os, sys
-module = input().strip()
+module = input("module name: ").strip()
 os.system(f"clang-format -i ./poly.cpp")
 with open(f"./test/main.cpp", "w") as file:
     file.write(open(f"./poly.cpp", "r").read() + open(f"./test/{module}.cpp").read())

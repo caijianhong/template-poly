@@ -3,8 +3,7 @@ int main() {
   int n;
   cin >> n;
   poly a(n);
-  for (auto&x:a) cin >> x;
-  for (auto&x:getSqrt(a, n)) cout << x << " ";
-  cout << endl;
+  cin >> a;
+  cout << getSqrt(a, n) << endl;
   return 0;
 }
