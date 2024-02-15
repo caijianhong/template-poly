@@ -95,7 +95,7 @@ struct poly : vector<mint> {
   poly(const vector<mint>& vec) : vector<mint>(vec) {}
   poly(initializer_list<mint> il) : vector<mint>(il) {}
   mint operator()(const mint& x) const;
-  poly cut(int lim) const;
+  poly& cut(int lim);
   void ntt(int op);
 };
 void print(const poly& a) {
@@ -125,10 +125,9 @@ mint poly::operator()(const mint& x) const {
   }
   return res;
 }
-poly poly::cut(int lim) const {
-  auto a = *this;
-  a.resize(lim);
-  return a;
+poly& poly::cut(int lim) {
+  resize(lim);
+  return *this;
 }
 void poly::ntt(int op) {
   static bool wns_flag = false;
