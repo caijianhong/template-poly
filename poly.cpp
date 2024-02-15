@@ -18,21 +18,21 @@ struct modint {
     if (x < 0) x += mod;
     v = x;
   }
+  modint(const string& str) {
+    v = 0;
+    for (char ch : str) {
+      if (ch != '-')
+        assert(isdigit(ch)), v = (v * 10ull % umod + ch - '0') % umod;
+    }
+    if (str.front() == '-' && v) v = umod - v;
+  }
   modint operator+() const { return *this; }
   modint operator-() const { return modint() - *this; }
   friend int raw(const modint& self) { return self.v; }
   friend istream& operator>>(istream& is, modint& self) {
     string str;
     is >> str;
-    self = 0;
-    int flag = 1;
-    for (char ch : str) {
-      if (ch == '-')
-        flag = -1;
-      else
-        assert(isdigit(ch)), self = self * 10 + ch - '0';
-    }
-    self *= flag;
+    self = str;
     return is;
   }
   friend ostream& operator<<(ostream& os, const modint& self) {
@@ -241,13 +241,16 @@ poly getExp(const poly& a, int lim) {
   }
   return b.cut(lim);
 }
-poly qpow(const poly& a, mint k, modint<mint::mod - 1> k0, int lim) {
+poly qpow(const poly& a, string k, int lim) {
   size_t i = 0;
   while (i < a.size() && a[i] == 0) i += 1;
-  if (i == a.size() || 1ull * i * raw(k) > 1ull * lim) return {};
-  lim -= i * raw(k);
-  return getExp(getLn(a / a[i] >> i, lim) * k, lim) * qpow(a[i], raw(k0))
-         << i * raw(k);
+  if (i == a.size() || (i > 0 && k.size() >= 9) ||
+      1ull * i * raw(mint(k)) > 1ull * lim)
+    return {};
+  lim -= i * raw(mint(k));
+  return getExp(getLn(a / a[i] >> i, lim) * k, lim) *
+             qpow(a[i], raw(modint<mint::mod - 1>(k)))
+         << i * raw(mint(k));
 }
 template <class T>
 mint divide_at(poly f, poly g, T n) {
