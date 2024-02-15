@@ -312,9 +312,7 @@ poly getSqrt(const poly& a, int lim) {
   poly b{sqrt(a[0])};
   for (int len = 2; len <= glim(lim); len <<= 1) {
     poly c = vector<mint>(a.begin(), a.begin() + min(len, (int)a.size()));
-    b = concalc(len << 1, {b, getInv(b * 2, len), c}, [](vector<mint> vec) {
-          return (vec[0] * vec[0] + vec[2]) * vec[1];
-        }).cut(len);
+    b = (c * getInv(b * 2, len) + b / 2).cut(len);
   }
   return b.cut(lim);
 }
