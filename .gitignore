@@ -30,6 +30,8 @@
 *.exe
 *.out
 *.app
+main
 
 # Vim files
 *~
+
