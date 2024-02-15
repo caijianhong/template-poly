@@ -20,9 +20,12 @@ struct modint {
   }
   modint(const string& str) {
     v = 0;
-    for (char ch : str) {
-      if (ch != '-')
-        assert(isdigit(ch)), v = (v * 10ull % umod + ch - '0') % umod;
+    size_t i = 0;
+    if (str.front() == '-') i += 1;
+    while (i < str.size()) {
+      assert(isdigit(str[i]));
+      v = (v * 10ull % umod + str[i] - '0') % umod;
+      i += 1;
     }
     if (str.front() == '-' && v) v = umod - v;
   }
@@ -179,6 +182,7 @@ poly operator-=(poly& a, const poly& b) {
   return a;
 }
 poly operator*=(poly& a, const mint& k) {
+  if (k == 1) return a;
   for (size_t i = 0; i < a.size(); i++) a[i] *= k;
   return a;
 }
@@ -245,8 +249,8 @@ poly qpow(const poly& a, string k, int lim) {
   size_t i = 0;
   while (i < a.size() && a[i] == 0) i += 1;
   if (i == a.size() || (i > 0 && k.size() >= 9) ||
-      1ull * i * raw(mint(k)) > 1ull * lim)
-    return {};
+      1ull * i * raw(mint(k)) >= 1ull * lim)
+    return poly(lim);
   lim -= i * raw(mint(k));
   return getExp(getLn(a / a[i] >> i, lim) * k, lim) *
              qpow(a[i], raw(modint<mint::mod - 1>(k)))
