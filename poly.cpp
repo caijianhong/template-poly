@@ -65,6 +65,13 @@ struct modint {
     }
     return *this *= inv[rhs.v];
   }
+  template <class T>
+  friend modint qpow(modint a, T b) {
+    modint r = 1;
+    for (; b; b >>= 1, a *= a)
+      if (b & 1) r *= a;
+    return r;
+  }
   friend modint operator+(modint lhs, const modint& rhs) { return lhs += rhs; }
   friend modint operator-(modint lhs, const modint& rhs) { return lhs -= rhs; }
   friend modint operator*(modint lhs, const modint& rhs) { return lhs *= rhs; }
@@ -76,13 +83,6 @@ struct modint {
     return lhs.v != rhs.v;
   }
 };
-template <unsigned umod, class T>
-modint<umod> qpow(modint<umod> a, T b) {
-  modint<umod> r = 1;
-  for (; b; b >>= 1, a *= a)
-    if (b & 1) r *= a;
-  return r;
-}
 typedef modint<998244353> mint;
 int glim(const int& x) { return 1 << (32 - __builtin_clz(x - 1)); }
 int bitctz(const int& x) { return __builtin_ctz(x); }
@@ -92,39 +92,33 @@ struct poly : vector<mint> {
   poly(const vector<mint>& vec) : vector<mint>(vec) {}
   poly(initializer_list<mint> il) : vector<mint>(il) {}
   mint operator()(const mint& x) const;
-  void ntt(const int& op);
-  poly getInv(int len) const;
   poly cut(int lim) const;
-  poly getInt() const;
-  poly getDev() const;
-  poly getLn(int lim) const;
-  poly getExp(int lim) const;
-  poly qpow(mint k, modint<mint::mod - 1> k0, int lim) const;
+  void ntt(int op);
 };
 void print(const poly& a) {
   for (size_t i = 0; i < a.size(); i++) debug("%d, ", raw(a[i]));
   debug("\n");
 }
 mint poly::operator()(const mint& x) const {
-  const vector<mint>& a = *this;
+  const auto& a = *this;
   mint res = 0;
   for (int i = (int)a.size() - 1; i >= 0; i--) {
     res = res * x + a[i];
   }
   return res;
 }
-poly cut(poly a, int lim) {
+poly poly::cut(int lim) const {
+  auto a = *this;
   a.resize(lim);
   return a;
 }
-poly poly::cut(int lim) const { return ::cut(*this, lim); }
-void poly::ntt(const int& op) {
+void poly::ntt(int op) {
   static bool wns_flag = false;
   static vector<mint> wns;
   if (!wns_flag) {
     wns_flag = true;
     for (int j = 1; j <= 23; j++) {
-      wns.push_back(::qpow(mint(3), raw(mint(-1)) >> j));
+      wns.push_back(qpow(mint(3), raw(mint(-1)) >> j));
     }
   }
   vector<mint>& a = *this;
@@ -174,7 +168,6 @@ poly getInv(const poly& a, int lim) {
   }
   return b.cut(lim);
 }
-poly poly::getInv(int lim) const { return ::getInv(*this, lim); }
 poly operator+=(poly& a, const poly& b) {
   if (a.size() < b.size()) a.resize(b.size());
   for (size_t i = 0; i < b.size(); i++) a[i] += b[i];
@@ -228,30 +221,26 @@ poly getDev(poly a) {
   for (size_t i = 1; i < a.size(); i++) a[i] *= i + 1;
   return a;
 }
-poly poly::getDev() const { return ::getDev(*this); }
 poly getInt(poly a) {
   a <<= 1;
   for (size_t i = 1; i < a.size(); i++) a[i] /= i;
   return a;
 }
-poly poly::getInt() const { return ::getInt(*this); }
 poly getLn(const poly& a, int lim) {
   assert(a[0] == 1);
   return getInt(getDev(a) * getInv(a, lim)).cut(lim);
 }
-poly poly::getLn(int lim) const { return ::getLn(*this, lim); }
 poly getExp(const poly& a, int lim) {
   assert(a[0] == 0);
   poly b{1};
   for (int len = 2; len <= glim(lim); len <<= 1) {
     poly c = vector<mint>(a.begin(), a.begin() + min(len, (int)a.size()));
-    b = concalc(len << 1, {b, b.getLn(len), c}, [](vector<mint> vec) {
+    b = concalc(len << 1, {b, getLn(b, len), c}, [](vector<mint> vec) {
           return vec[0] * (1 - vec[1] + vec[2]);
         }).cut(len);
   }
   return b.cut(lim);
 }
-poly poly::getExp(int lim) const { return ::getExp(*this, lim); }
 poly qpow(const poly& a, mint k, modint<mint::mod - 1> k0, int lim) {
   size_t i = 0;
   while (i < a.size() && a[i] == 0) i += 1;
@@ -259,9 +248,6 @@ poly qpow(const poly& a, mint k, modint<mint::mod - 1> k0, int lim) {
   lim -= i * raw(k);
   return getExp(getLn(a / a[i] >> i, lim) * k, lim) * qpow(a[i], raw(k0))
          << i * raw(k);
-}
-poly poly::qpow(mint k, modint<mint::mod - 1> k0, int lim) const {
-  return ::qpow(*this, k, k0, lim);
 }
 template <class T>
 mint divide_at(poly f, poly g, T n) {

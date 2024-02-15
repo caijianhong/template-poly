@@ -4,7 +4,7 @@ void TestGetLn() {
   cin >> n;
   poly a(n);
   for (auto& x : a) cin >> x;
-  for (auto x : a.getLn(n)) cout << x << " ";
+  for (auto x : getLn(a, n)) cout << x << " ";
   cout << endl;
 }
 int main() {
