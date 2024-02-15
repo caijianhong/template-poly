@@ -53,13 +53,13 @@ struct modint {
     return *this;
   }
   modint& operator/=(const modint& rhs) {
-    static constexpr int ilim = 1 << 20;
+    static constexpr size_t ilim = 1 << 20;
     static modint inv[ilim + 10];
-    static unsigned sz = 0;
+    static int sz = 0;
     assert(rhs.v);
     if (rhs.v > ilim) return *this *= qpow(rhs, mod - 2);
     if (!sz) inv[1] = sz = 1;
-    while (sz < rhs.v) {
+    while (sz < (int)rhs.v) {
       for (int i = sz + 1; i <= sz << 1; i++) inv[i] = -mod / i * inv[mod % i];
       sz <<= 1;
     }
@@ -102,7 +102,7 @@ struct poly : vector<mint> {
   poly qpow(LL k, int lim) const;
 };
 void print(const poly& a) {
-  for (int i = 0; i < a.size(); i++) debug("%d, ", raw(a[i]));
+  for (size_t i = 0; i < a.size(); i++) debug("%d, ", raw(a[i]));
   debug("\n");
 }
 mint poly::operator()(const mint& x) const {
@@ -177,16 +177,16 @@ poly getInv(const poly& a, int lim) {
 poly poly::getInv(int lim) const { return ::getInv(*this, lim); }
 poly operator+=(poly& a, const poly& b) {
   if (a.size() < b.size()) a.resize(b.size());
-  for (int i = 0; i < b.size(); i++) a[i] += b[i];
+  for (size_t i = 0; i < b.size(); i++) a[i] += b[i];
   return a;
 }
 poly operator-=(poly& a, const poly& b) {
   if (a.size() < b.size()) a.resize(b.size());
-  for (int i = 0; i < b.size(); i++) a[i] -= b[i];
+  for (size_t i = 0; i < b.size(); i++) a[i] -= b[i];
   return a;
 }
 poly operator*=(poly& a, const mint& k) {
-  for (int i = 0; i < a.size(); i++) a[i] *= k;
+  for (size_t i = 0; i < a.size(); i++) a[i] *= k;
   return a;
 }
 poly operator/=(poly& a, const mint& k) { return a *= 1 / k; }
@@ -204,13 +204,11 @@ poly operator*(const poly& a, const poly& b) {
   if (a.empty() || b.empty()) return {};
   int rlen = a.size() + b.size() - 1;
   int len = glim(rlen);
-  if (1ll * a.size() * b.size() <= len * bitctz(len)) {
+  if (1ull * a.size() * b.size() <= 1ull * len * bitctz(len)) {
     poly ret(rlen);
-    for (int i = 0; i < a.size(); i++) {
-      for (int j = 0; j < b.size(); j++) {
+    for (size_t i = 0; i < a.size(); i++) 
+      for (size_t j = 0; j < b.size(); j++)
         ret[i + j] += a[i] * b[j];
-      }
-    }
     return ret;
   } else {
     return concalc(len, {a, b},
@@ -228,13 +226,13 @@ poly operator<<(poly a, const int& k) { return a <<= k; }
 poly operator>>(poly a, const int& k) { return a >>= k; }
 poly getDev(poly a) {
   a >>= 1;
-  for (int i = 1; i < a.size(); i++) a[i] *= i + 1;
+  for (size_t i = 1; i < a.size(); i++) a[i] *= i + 1;
   return a;
 }
 poly poly::getDev() const { return ::getDev(*this); }
 poly getInt(poly a) {
   a <<= 1;
-  for (int i = 1; i < a.size(); i++) a[i] /= i;
+  for (size_t i = 1; i < a.size(); i++) a[i] /= i;
   return a;
 }
 poly poly::getInt() const { return ::getInt(*this); }
@@ -256,7 +254,7 @@ poly getExp(poly a, int lim) {
 }
 poly poly::getExp(int lim) const { return ::getExp(*this, lim); }
 poly qpow(poly a, LL k, int lim) {
-  int i = 0;
+  size_t i = 0;
   while (i < a.size() && a[i] == 0) i += 1;
   if (i == a.size()) return {};
   return getExp(getLn(a / a[i] >> i, lim) * k, lim) * a[i] << i;
@@ -266,12 +264,12 @@ template <class T>
 mint divide_at(poly f, poly g, T n) {
   for (; n; n >>= 1) {
     poly r = g;
-    for (int i = 1; i < r.size(); i += 2) r[i] *= -1;
+    for (size_t i = 1; i < r.size(); i += 2) r[i] *= -1;
     f *= r;
     g *= r;
-    for (int i = n & 1; i < f.size(); i += 2) f[i >> 1] = f[i];
+    for (size_t i = n & 1; i < f.size(); i += 2) f[i >> 1] = f[i];
     f.resize((f.size() + 1) >> 1);
-    for (int i = 0; i < g.size(); i += 2) g[i >> 1] = g[i];
+    for (size_t i = 0; i < g.size(); i += 2) g[i >> 1] = g[i];
     g.resize((g.size() + 1) >> 1);
   }
   return f.empty() ? 0 : f[0] / g[0];
@@ -289,9 +287,9 @@ poly BM(poly a) {
   poly ans, lst;
   int w = 0;
   mint delta = 0;
-  for (int i = 0; i < a.size(); i++) {
+  for (size_t i = 0; i < a.size(); i++) {
     mint tmp = -a[i];
-    for (int j = 0; j < ans.size(); j++) tmp += ans[j] * a[i - j - 1];
+    for (size_t j = 0; j < ans.size(); j++) tmp += ans[j] * a[i - j - 1];
     if (tmp == 0) continue;
     if (ans.empty()) {
       w = i;
@@ -302,7 +300,7 @@ poly BM(poly a) {
       mint mul = -tmp / delta;
       if (ans.size() < lst.size() + i - w) ans.resize(lst.size() + i - w);
       ans[i - w - 1] -= mul;
-      for (int j = 0; j < lst.size(); j++) ans[i - w + j] += lst[j] * mul;
+      for (size_t j = 0; j < lst.size(); j++) ans[i - w + j] += lst[j] * mul;
       if (now.size() <= lst.size() + i - w) {
         w = i;
         lst = now;
@@ -314,20 +312,20 @@ poly BM(poly a) {
 }
 poly lagrange(const vector<pair<mint, mint>>& a) {
   poly ans(a.size()), product{1};
-  for (int i = 0; i < a.size(); i++) {
+  for (size_t i = 0; i < a.size(); i++) {
     product *= poly{-a[i].first, 1};
   }
   auto divide2 = [&](poly a, mint b) {
     poly res(a.size() - 1);
-    for (int i = (int)a.size() - 1; i >= 1; i--) {
+    for (size_t i = (int)a.size() - 1; i >= 1; i--) {
       res[i - 1] = a[i];
       a[i - 1] -= a[i] * b;
     }
     return res;
   };
-  for (int i = 0; i < a.size(); i++) {
+  for (size_t i = 0; i < a.size(); i++) {
     mint denos = 1;
-    for (int j = 0; j < a.size(); j++) {
+    for (size_t j = 0; j < a.size(); j++) {
       if (i != j) denos *= a[i].first - a[j].first;
     }
     poly numes = divide2(product, -a[i].first);
