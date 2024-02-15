@@ -212,9 +212,23 @@ poly operator*(const poly& a, const poly& b) {
         .cut(rlen);
   }
 }
-poly operator*=(poly& a, const poly& b) { return a = a * b; }
-poly operator+(poly a, const poly& b) { return a += b; }
+poly operator/(poly a, poly b) {
+  if (a.size() < b.size()) return {};
+  int rlen = a.size() - b.size() + 1;
+  reverse(a.begin(), a.end());
+  reverse(b.begin(), b.end());
+  a = (a * getInv(b, rlen)).cut(rlen);
+  reverse(a.begin(), a.end());
+  return a;
+}
 poly operator-(poly a, const poly& b) { return a -= b; }
+poly operator%(const poly& a, const poly& b) {
+  return (a - (a / b) * b).cut(b.size() - 1);
+}
+poly operator*=(poly& a, const poly& b) { return a = a * b; }
+poly operator/=(poly& a, const poly& b) { return a = a / b; }
+poly operator%=(poly& a, const poly& b) { return a = a % b; }
+poly operator+(poly a, const poly& b) { return a += b; }
 poly operator*(poly a, const mint& k) { return a *= k; }
 poly operator*(const mint& k, poly a) { return a *= k; }
 poly operator/(poly a, const mint& k) { return a /= k; }
@@ -255,6 +269,38 @@ poly qpow(const poly& a, string k, int lim) {
   return getExp(getLn(a / a[i] >> i, lim) * k, lim) *
              qpow(a[i], raw(modint<mint::mod - 1>(k)))
          << i * raw(mint(k));
+}
+mint sqrt(const mint& c) {
+  static const auto check = [](mint c) {
+    return qpow(c, (mint::mod - 1) >> 1) == 1;
+  };
+  if (raw(c) <= 1) return 1;
+  if (!check(c)) throw "No solution!";
+  static mt19937 rng{random_device{}()};
+  mint a = rng();
+  while (check(a * a - c)) a = rng();
+  typedef pair<mint, mint> number;
+  const auto mul = [=](number x, number y) {
+    return make_pair(x.first * y.first + x.second * y.second * (a * a - c),
+                     x.first * y.second + x.second * y.first);
+  };
+  const auto qpow = [=](number a, int b) {
+    number r = {1, 0};
+    for (; b; b >>= 1, a = mul(a, a))
+      if (b & 1) r = mul(r, a);
+    return r;
+  };
+  return qpow({a, 1}, (mint::mod + 1) >> 1).first;
+}
+poly getSqrt(const poly& a, int lim) {
+  poly b{sqrt(a[0])};
+  for (int len = 2; len <= glim(lim); len <<= 1) {
+    poly c = vector<mint>(a.begin(), a.begin() + min(len, (int)a.size()));
+    b = concalc(len << 1, {b, getInv(b * 2, len), c}, [](vector<mint> vec) {
+          return (vec[0] * vec[0] + vec[2]) * vec[1];
+        }).cut(len);
+  }
+  return b.cut(lim);
 }
 template <class T>
 mint divide_at(poly f, poly g, T n) {
