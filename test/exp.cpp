@@ -6,7 +6,7 @@ int main() {
   cin >> n;
   poly a(n);
   for (auto& x : a) cin >> x;
-  for (auto x :getExp(a, n)) cout << x << " ";
+  for (auto x : getExp(a, n)) cout << x << " ";
   cout << endl;
   return 0;
 }
