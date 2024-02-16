@@ -98,10 +98,12 @@ poly getInv(const poly& a, int lim);
 设 $n$ 为偶数，已经知道了 $H_*(x)=H(x)\bmod{x^{n/2}}$ 满足 $G(H_*(x))\equiv 0\pmod{x^{n/2}}$（$H(0)$ 需要特殊计算）。想知道 $H(x)\bmod x^{n}$。
 
 在 $H(x)=H_*(x)$ 处对 $G(H(x))$ 作泰勒展开。
+
 $$
 G(H(x))=\sum_{i=0}^{+\infty}\dfrac{G^{(i)}(H_*(x))}{i!}(H(x)-H_*(x))^i=0
 $$
 上式，若两边 $\bmod x^{n}$，因为 $H(x)-H_*(x)$ 的前 $n/2$ 项系数全零，所以 $(H(x)-H_*(x))^i$ 在 $i\geq 2$ 时是零。
+
 $$
 G(H(x))\equiv \sum_{i=0}^{+\infty}\dfrac{G^{(i)}(H_*(x))}{i!}(H(x)-H_*(x))^i\equiv 0\pmod{x^n}
 $$
@@ -111,6 +113,7 @@ G(H(x))\equiv G(H_*(x))+G'(H_*(x))(H(x)-H_*(x))\equiv 0\pmod{x^n}
 $$
 
 所以
+
 $$
 G(H_*(x))+G'(H_*(x))H(x)\equiv G'(H_*(x))H_*(x)\pmod{x^n}
 $$
@@ -128,11 +131,13 @@ $$
 ### solution
 
 需要找到 $H(x)$，使得 $G(H(x))=\dfrac{1}{H(x)}-F(x)=0$。
+
 $$
 H(x)\equiv H_*(x)-\dfrac{\dfrac{1}{H_*(x)}-F(x)}{-\dfrac{1}{H_*^2(x)}}\pmod {x^n}
 $$
 
 这里 $F(x)$ 与 $H(x)$ 无关，是常数，求导时消失了。
+
 $$
 H(x)\equiv 2H_*(x)-H_*^2(x)F(x)\pmod {x^n}
 $$
@@ -158,10 +163,13 @@ poly operator%(const poly& a, const poly& b);
 ### solution
 
 若 $R(x)=0$，则直接使用多项式求逆解决。不妨，定义
+
 $$
 F^R(x)=x^nF\left(\dfrac{1}{x}\right)
 $$
+
 注意，$n$ 是 $F(x)$ 最高次项的次数。发现这样 $x^0$ 项系数成为 $x^n$ 项系数，$x^n$ 项系数成为 $x^0$ 项系数，系数的顺序翻转了。而且有 $(F^R)^R(x)=F(x)$。
+
 $$
 F(1/x) = Q(1/x) * G(1/x) + R(1/x)
 $$
@@ -216,6 +224,7 @@ poly getLn(const poly& a, int lim);
 ```
 
 给出 $\ln$ 的麦克劳林级数：
+
 $$
 \ln(1+x)=\sum_{i=0}^{+\infty}\dfrac{(-1)^{i+1}}{i}x^i
 $$
@@ -229,13 +238,17 @@ $$
 ### solution
 
 复合函数求导的链式法则：$(F(G(x)))'=F'(G(x))G'(x)$ 具体来说是
+
 $$
 \dfrac{\mathrm d}{\mathrm dx}F(G(x))=\dfrac{\mathrm d}{\mathrm dG(x)}F(G(x))\cdot \dfrac{\mathrm d}{\mathrm dx}G(x)
 $$
+
 对 $\ln F(x)$ 求导再积分得到
+
 $$
 \dfrac{\mathrm d}{\mathrm dx}\ln F(x)=\dfrac{\dfrac{\mathrm d}{\mathrm dx}F(x)}{F(x)}\implies \ln F(x)=\int\mathrm d\ln F(x)=\int \dfrac{\dfrac{\mathrm d}{\mathrm dx}F(x)}{F(x)}\mathrm dx
 $$
+
 即 $\ln F(x)=\int F'(x)/F(x)\mathrm dx$。~~注意不要把 dx 约掉~~。
 
 ## 多项式对数函数（exp）
@@ -249,6 +262,7 @@ poly getExp(const poly& a, int lim);
 ```
 
 给出 $\exp$ 的麦克劳林级数：
+
 $$
 \exp x=\sum_{i=0}^{+\infty}\frac{x^i}{i!}
 $$
@@ -256,6 +270,7 @@ $$
 ### solution
 
 需要找到 $H(x)$，使得 $G(H(x))=\ln H(x)-F(x)=0$。应用 Newton's Method。
+
 $$
 H(x)\equiv H_*(x)-\dfrac{\ln H_*(x)-F(x)}{\dfrac{1}{H_*(x)}}\pmod {x^n}
 $$
@@ -288,9 +303,11 @@ $$
 ### 定理一
 
 $p$ 是质数。来源：[这里第一篇题解](https://www.luogu.com.cn/problem/solution/P5245)、[这个链接暂时无法访问](https://www.luogu.com.cn/blog/_post/304253)
+
 $$
 F^p(x)\equiv F(x^p)\pmod p
 $$
+
 证明略。反正可以得出，因为 $n<p$，所以 $F^p(x)\equiv F(x^p)\equiv F(0)\equiv 1\pmod {x^{n}}$（在 $\mathbb F_p$ 上）。
 
 所以在对 $\ln F(x)$ 点乘 $k$ 时，$k$ 可以对 $p$ 取模，这里的 $p=998244353$。
@@ -298,9 +315,11 @@ $$
 ### 定理二
 
 $p$ 是质数，$a\not\equiv0\pmod p$，费马小定理：
+
 $$
 a^{p-1}\equiv 1\pmod p
 $$
+
 所以将常数项乘回去时，$k$ 要对 $p-1$ 取模，即最终的多项式要乘 $F^{k\bmod (p-1)}(0)$ 再乘上 $x$ 的若干次方。
 
 ## 多项式开根
@@ -317,6 +336,7 @@ poly getSqrt(const poly& a, int lim);
 ### solution
 
 需要找到 $H(x)$，使得 $G(H(x))= H^2(x)-F(x)=0$。应用 Newton's Method。
+
 $$
 H(x)\equiv H_*(x)-\dfrac{ H_*^2(x)-F(x)}{ 2H_*(x)}\pmod {x^n}
 $$
@@ -346,9 +366,11 @@ $$
 $$
 
 则 
+
 $$
 f(x)=\sum_i\ell_i(x)y_i
 $$
+
 正确性比较显然。先暴力求出 $\prod_i(x-x_i)$，然后每次将他 $O(n)$ 的除掉一个二项式。$O(n^2)$。
 
 ## Berlekamp–Massey 算法（最短线性递推式）
