@@ -284,6 +284,17 @@ poly qpow(const poly& a, string k, int lim) {
              qpow(a[i], raw(modint<mint::mod - 1>(k)))
          << i * raw(mint(k));
 }
+poly qpow(const poly& a, LL k, int lim) {
+  size_t i = 0;
+  while (i < a.size() && a[i] == 0) i += 1;
+  if (i == a.size() || (i > 0 && k >= 1e9) ||
+      1ull * i * k >= 1ull * lim)
+    return poly(lim);
+  lim -= i * k;
+  return getExp(getLn(a / a[i] >> i, lim) * k, lim) *
+             qpow(a[i], raw(modint<mint::mod - 1>(k)))
+         << i * k;
+}
 mint sqrt(const mint& c) {
   static const auto check = [](mint c) {
     return qpow(c, (mint::mod - 1) >> 1) == 1;
