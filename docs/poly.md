@@ -102,6 +102,7 @@ poly getInv(const poly& a, int lim);
 $$
 G(H(x))=\sum_{i=0}^{+\infty}\dfrac{G^{(i)}(H_*(x))}{i!}(H(x)-H_*(x))^i=0
 $$
+
 上式，若两边 $\bmod x^{n}$，因为 $H(x)-H_*(x)$ 的前 $n/2$ 项系数全零，所以 $(H(x)-H_*(x))^i$ 在 $i\geq 2$ 时是零。
 
 $$
@@ -459,6 +460,7 @@ mint divide_at(poly f, poly g, T n) {
 $$
 a_n=\sum\limits_{i=1}^{k}f_i \times a_{n-i}
 $$
+
 给出的是 $a_0,a_1,\cdots,a_{k-1}$ 和 $f_1, f_2, \cdots, f_k$ 注意下标。
 
 ### code
