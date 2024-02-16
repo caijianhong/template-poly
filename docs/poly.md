@@ -123,10 +123,10 @@ $$
 H(x)\equiv H_*(x)-\dfrac{G(H_*(x))}{G'(H_*(x))}\pmod {x^n}
 $$
 
-注意这个 $G'$ 是一个导数，我们最好指明它导的是 $H(x)$ 而不是 $x$。这意味着与 $H(x)$ 无关的项应视作常数。
+注意这个 $G'$ 是一个导数，我们最好指明它导的是 $H_*(x)$ 而不是 $x$。这意味着与 $H_*(x)$ 无关的项应视作常数。
 
 $$
-H(x)\equiv H_*(x)-\dfrac{G(H_*(x))}{\dfrac{\mathrm d}{\mathrm dH(x)}G(H_*(x))}\pmod {x^n}
+H(x)\equiv H_*(x)-\dfrac{G(H_*(x))}{\dfrac{\mathrm d}{\mathrm dH_*(x)}G(H_*(x))}\pmod {x^n}
 $$
 
 ### solution
@@ -227,14 +227,18 @@ poly getLn(const poly& a, int lim);
 给出 $\ln$ 的麦克劳林级数：
 
 $$
-\ln(1+x)=\sum_{i=0}^{+\infty}\dfrac{(-1)^{i+1}}{i}x^i
+\ln(1+x)=\sum_{i=1}^{+\infty}\dfrac{(-1)^{i+1}}{i}x^i
 $$
 
 $$
-\ln(1-x)=-\sum_{i=0}^{+\infty}\frac{x^i}{i}
+\ln(1-x)=-\sum_{i=1}^{+\infty}\frac{x^i}{i}
 $$
 
 要点：$\ln(1+x)$ 的关于 $x$ 的导数是复合函数求导，是 $\frac{1}{1+x}$，二阶导也是复合函数，是 $\frac{-1}{(1+x)^2}$。
+
+$$
+\ln(x)=\sum_{i=1}^{+\infty}\dfrac{(-1)^{i+1}}{i}(x-1)^i
+$$
 
 ### solution
 
