@@ -25,7 +25,7 @@ poly(initializer_list<mint> il);
 
 - `poly operator<<(poly a, const int& k);` 和`poly operator>>(poly a, const int& k);` 分别是乘 $x^k$ 和除 $x^k$（$<k$ 次项舍弃）。有对应的 `operator<<=` 和 `operator>>=`。
 
-- `void poly::ntt(int op)`; 是 NTT：$op=1$ 是 DFT，$op=-1$ 是 IDFT。
+- `void poly::ntt(int op)`; 是 NTT：$op=1$ 是 DFT，$op=-1$ 是 IDFT。实现是纯暴力。
 
 - `poly concalc(int n, vector<poly> vec, const function<mint(vector<mint>)>& func);` 这个接口主要用于实现牛顿迭代，$n$ 是最高次数，$vec$ 是若干多项式，$func$ 是一个计算的回调函数，如计算多项式乘法是这样的：
   - `concalc(len, {a, b}, [](vector<mint> vec) { return vec[0] * vec[1]; });`
@@ -82,13 +82,57 @@ poly operator*(const poly& a, const poly& b);
 
 <https://www.cnblogs.com/caijianhong/p/template-fft.html>。$O(n\log n)$。
 
+### code
+
+便于记背。
+
+```cpp
+typedef modint<998244353> mint;
+int glim(const int& x) { return 1 << (32 - __builtin_clz(x - 1)); }
+int bitctz(const int& x) { return __builtin_ctz(x); }
+void poly::ntt(int op) {
+  static bool wns_flag = false;
+  static vector<mint> wns;
+  if (!wns_flag) {
+    wns_flag = true;
+    for (int j = 1; j <= 23; j++) {
+      wns.push_back(qpow(mint(3), raw(mint(-1)) >> j));
+    }
+  }
+  vector<mint>& a = *this;
+  int n = a.size();
+  for (int i = 1, r = 0; i < n; i++) {
+    r ^= n - (1 << (bitctz(n) - bitctz(i) - 1));
+    if (i < r) std::swap(a[i], a[r]);
+  }
+  vector<mint> w(n);
+  for (int k = 1, len = 2; len <= n; k <<= 1, len <<= 1) {
+    mint wn = wns[bitctz(k)];
+    for (int i = raw(w[0] = 1); i < k; i++) w[i] = w[i - 1] * wn;
+    for (int i = 0; i < n; i += len) {
+      for (int j = 0; j < k; j++) {
+        mint x = a[i + j], y = a[i + j + k] * w[j];
+        a[i + j] = x + y, a[i + j + k] = x - y;
+      }
+    }
+  }
+  if (op == -1) {
+    mint iz = mint(1) / n;
+    for (int i = 0; i < n; i++) a[i] *= iz;
+    reverse(a.begin() + 1, a.end());
+  }
+}
+```
+
+
+
 ## 多项式乘法逆
 
 ### 问题
 
 给出 $F(x)$，求 $H(x)\bmod x^{lim}$ 满足 $H(x)F(x)\equiv 1\pmod{x^{lim}}$。
 
-注意，此处 $H(x)$ 是无限项的多项式，我们只需要 $H(x)\bmod x^{lim}$。
+注意，此处 $H(x)$ 是无限项的多项式，我们只需要 $H(x)\bmod x^{lim}$。另外需要保证 $F(0)\neq 0$，否则逆元在  $\mathbb F_{998244353}$ 上不存在（如果是其他的域，要求 $F(0)$ 存在逆元）。
 
 ```cpp
 poly getInv(const poly& a, int lim);
@@ -96,7 +140,7 @@ poly getInv(const poly& a, int lim);
 
 ### Newton's Method
 
-给出 $F(x), G(H(x))$，我们需要找到 $H(x)$ 使得 $G(H(x))=0$。
+给出 $G(H(x))$，我们需要找到 $H(x)$ 使得 $G(H(x))=0$。
 
 设 $n$ 为偶数，已经知道了 $H_*(x)=H(x)\bmod{x^{n/2}}$ 满足 $G(H_*(x))\equiv 0\pmod{x^{n/2}}$（$H(0)$ 需要特殊计算）。想知道 $H(x)\bmod x^{n}$。
 
@@ -198,11 +242,11 @@ $$
 
 $O(n\log n)$。
 
-## 多项式形式导数、形式不定积分
+## 多项式形式导数与不定积分
 
 ### 问题
 
-给出 $F(x)$，求 $H(x)$ 满足 $H(x)=\dfrac{\mathrm{d}}{\mathrm dx}F(x)$ 或者 $H(x)=\displaystyle \int F(x)\mathrm dx$。
+给出 $F(x)$，求 $H(x)$ 满足 $H(x)=\dfrac{\mathrm{d}}{\mathrm dx}F(x)$（形式导数）或者 $H(x)=\displaystyle \int F(x)\mathrm dx$（形式不定积分）。
 
 这里默认形式不定积分的常数项为 $0$，尽管应该是任意常数。
 
@@ -225,14 +269,15 @@ $$
 
 给出 $F(x)$，求 $H(x)\bmod x^{lim}$ 满足 $H(x)\equiv \ln F(x)\pmod{x^{lim}}$。
 
-注意，此处 $H(x)$ 是无限项的多项式，我们只需要 $H(x)\bmod x^{lim}$。另外需要保证 $F(0)=1$ 否则在这个域上不存在。
+注意，此处 $H(x)$ 是无限项的多项式，我们只需要 $H(x)\bmod x^{lim}$。另外需要保证 $F(0)=1$，否则在  $\mathbb F_{998244353}$ 上不存在。
 
 ```cpp
 poly getLn(const poly& a, int lim);
 ```
 
-给出 $\ln$ 的麦克劳林级数：
+### 级数表示
 
+给出 $\ln$ 的麦克劳林级数：
 $$
 \ln(1+x)=\sum_{i=1}^{+\infty}\dfrac{(-1)^{i+1}}{i}x^i
 $$
@@ -247,21 +292,26 @@ $$
 \ln(x)=\sum_{i=1}^{+\infty}\dfrac{(-1)^{i+1}}{i}(x-1)^i
 $$
 
-### solution
+### 链式法则
 
-复合函数求导的链式法则：$(F(G(x)))'=F'(G(x))G'(x)$ 具体来说是
+复合函数求导的链式法则：$(F(G(x)))'=F'(G(x))G'(x)$。具体来说是
 
 $$
 \dfrac{\mathrm d}{\mathrm dx}F(G(x))=\dfrac{\mathrm d}{\mathrm dG(x)}F(G(x))\cdot \dfrac{\mathrm d}{\mathrm dx}G(x)
 $$
 
-对 $\ln F(x)$ 求导再积分得到
+### solution
 
+对 $\ln F(x)$ 求导再积分得到
 $$
 \dfrac{\mathrm d}{\mathrm dx}\ln F(x)=\dfrac{\dfrac{\mathrm d}{\mathrm dx}F(x)}{F(x)}\implies \ln F(x)=\int\mathrm d\ln F(x)=\int \dfrac{\dfrac{\mathrm d}{\mathrm dx}F(x)}{F(x)}\mathrm dx
 $$
 
-即 $\ln F(x)=\int F'(x)/F(x)\mathrm dx$。~~注意不要把 dx 约掉~~。
+即 
+$$
+\ln F(x)=\int \frac{F'(x)}{F(x)}\mathrm dx
+$$
+~~注意不要把 dx 约掉~~。
 
 ## 多项式对数函数（exp）
 
@@ -269,14 +319,15 @@ $$
 
 给出 $F(x)$，求 $H(x)\bmod x^{lim}$ 满足 $H(x)\equiv \exp F(x)\pmod{x^{lim}}$。
 
-注意，此处 $H(x)$ 是无限项的多项式，我们只需要 $H(x)\bmod x^{lim}$。另外需要保证 $F(0)=0$ 否则在这个域上不存在。
+注意，此处 $H(x)$ 是无限项的多项式，我们只需要 $H(x)\bmod x^{lim}$。另外需要保证 $F(0)=0$，否则在 $\mathbb F_{998244353}$ 上不存在。
 
 ```cpp
 poly getExp(const poly& a, int lim);
 ```
 
-给出 $\exp$ 的麦克劳林级数：
+### 级数表示
 
+给出 $\exp$ 的麦克劳林级数：
 $$
 \exp x=\sum_{i=0}^{+\infty}\frac{x^i}{i!}
 $$
@@ -312,7 +363,7 @@ $$
 H(x)=F^k(x)=\exp(\ln F^k(x))=\exp(k\ln F(x))
 $$
 
-需要通过微调使得 $F(0)=1$，首先将 $F(x)$ 除 $x$ 直到有常数项，然后所有系数除掉 $F(0)$。最后再搞回去。这里注意的是取模问题，有两个定理：
+需要通过微调使得 $F(0)=1$，首先将 $F(x)$ 除 $x$ 直到有常数项，然后所有系数除掉 $F(0)$。最后再搞回去。这里注意的是取模问题，有两个定理帮助我们：
 
 ### 定理一
 
@@ -365,7 +416,7 @@ $$
 
 ### 问题
 
-$n$ 个点 $(x_i,y_i)$ 可以唯一地确定一个多项式 $y = f(x)$。现在，给定这 $n$ 个点，请你确定这个多项式。
+$n$ 个点 $(x_i,y_i)$ 可以唯一地确定一个 $n-1$ 次多项式 $f(x)$。现在，给定这 $n$ 个点，请你确定这个多项式。
 
 ```cpp
 poly lagrange(const vector<pair<mint, mint>>& a);
@@ -391,24 +442,48 @@ $$
 
 ### 问题
 
-给出一个数列 $P$ 从 $0$ 开始的前 $n$ 项。求序列 $P$ 在 $\bmod~998244353$ 下的最短线性递推式。注意需要保证最短线性递推式长度 $\leq n/2$。
+给出一个数列 $P$ 从 $0$ 开始的前 $n$ 项 $\{P_0, P_1, P_2, \cdots, P_{n-1}\}$。求序列 $P$ 在 $\bmod~998244353$ 下的最短线性递推式。注意需要保证最短线性递推式长度 $\leq n/2$（意思是：如果这个序列不是线性递推的，会返回长度为 $n/2$ 的假的递推式）。
 
 ```cpp
 poly BM(poly a);
 ```
 
+### solution
+
+将 $P$ 下标从 $1$ 开始，递推式下标从 $0$ 开始。记 $P[1...i]$ 的最短线性递推式为 $R_i$，特别地有 $R_0=\{\}$。已知 $R[0...(i-1)]$，怎么求 $R_i$？
+
+首先计算一个 $\Delta(R_{i-1}, i)=del_{i}=\sum_{j=0}R_{i-1, j}a_{i-j-1}-a_i$。如果 $\Delta(R_{i-1}, i)=0$ 那么说明 $R_i=R_{i-1}$，结束。否则就失配了。第一种情况是 $R_{i-1}=\{\}$，只需要使得 $R_i$ 为 $i$ 个 $0$，即强制使得前面这 $i$ 个数是初始给定不用管的。
+
+第二种情况，我们实际上是要考虑找出一个 $R'=\{R'_0, R'_1, \cdots,R'_{k-1}\}$ 使得对于 $k<p<i$ 都有 $\sum_{j=0}^{k-1}R'_{j}a_{p-j-1}=0$ 而且唯独有 $\sum_{j=0}^{k-1}R'_{j}a_{i-j-1}=-del_i$，然后 $R_i=R_{i-1}+R'$ 就好了，这里加法是对应位相加。这个事情就很严重。解决方法是任选一个 $w$，然后回忆起 $R_w$ 和当时的 $del_{w+1}=delta$，构造 $R'=\{0, 0, \cdots, 0, del_i/delta, -del_i/delta\times R_w\}$，后面这个 $\times R_w$ 是这个序列去数乘上前面的数再接上前面的序列，然后有 $i-w-2$ 个零在前面。然后我们验证一下它合法。
+
+设 $k=i-w-1+|R_w|$。对于 $k<p<i$：
+
+$$
+\Delta(R', p)+a_p=\sum_{j=0}^{k-1}R'_{ j}a_{p-j-1}=\dfrac{del_i}{delta}(a_{p-i + w + 1}-\sum_{j=0}R_wa_{p-j-i+w})=-\dfrac{del_i}{delta}\Delta(R_w, p-i+w+1).
+$$
+
+因为 $p<i$，所以 $p-i+w+1\leq w$，根据定义，$\Delta(R_w, p-i+w+1)=0$。满足条件。
+
+对于 $p=i$。
+$$
+\Delta(R', i)+a_i=\sum_{j=0}^{k-1}R'_{ j}a_{i-j-1}=-\dfrac{del_i}{del_w}\Delta(R_w, w+1).
+$$
+因为这里 $\Delta(R_w, w+1)=del_{w+1}=delta$，所以这玩意等于 $-del_i$，全对。
+
+为了使得 $R_i$ 最短，选使 $R'$ 最短的 $w$ 即可。
+
 ### code
 
-(solution is WIP, replace it with the code)
+具体代码有 0 下标细节等，可以在这里看一下。注意最终返回递推式下标从 $1$ 开始。
 
 ```cpp
 poly BM(poly a) {
   poly ans, lst;
   int w = 0;
   mint delta = 0;
-  for (size_t i = 0; i < a.size(); i++) {
+  for (int i = 0; i < a.size(); i++) {
     mint tmp = -a[i];
-    for (size_t j = 0; j < ans.size(); j++) tmp += ans[j] * a[i - j - 1];
+    for (int j = 0; j < ans.size(); j++) tmp += ans[j] * a[i - j - 1];
     if (tmp == 0) continue;
     if (ans.empty()) {
       w = i;
@@ -420,7 +495,7 @@ poly BM(poly a) {
       if (ans.size() < lst.size() + i - w) ans.resize(lst.size() + i - w);
       ans[i - w - 1] -= mul;
       for (size_t j = 0; j < lst.size(); j++) ans[i - w + j] += lst[j] * mul;
-      if (now.size() <= lst.size() + i - w) {
+      if (now.size() <= lst.size() + i - w) { // 注意此时无符号数溢出，注意移项
         w = i;
         lst = now;
         delta = tmp;
@@ -442,7 +517,7 @@ template <class T>
 mint divide_at(poly f, poly g, T n);
 ```
 
-### code
+### solution
 
 $$
 [x^n]\frac{F(x)}{G(x)}=[x^n]\frac{F(x)G(-x)}{G(x)G(-x)}.
@@ -474,7 +549,7 @@ template <class T>
 mint linear_rec(poly a, poly f, T n);
 ```
 
-### code
+### solution
 
 我们只需要构造 $F(x), G(x)$ 使得 $[x^n]\dfrac{F(x)}{G(x)}=a_n$ 即可。以下记 $F_i=[x^i]F(x)$。
 
@@ -486,4 +561,8 @@ $$
 
 又因为 $F(x)=G(x)a(x)\pmod {x^k}$，于是暴力计算 $F(x)$。
 
-然后应用 Bostan-Mori 算法即可。
+然后应用 Bostan-Mori 算法即可。即我们想要算的是以下东西：
+$$
+[x^n]\dfrac{a(1-f)\bmod x^{k}}{1-f}.
+$$
+注意 $f$ 下标从 $1$ 开始。
