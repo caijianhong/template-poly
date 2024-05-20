@@ -27,9 +27,10 @@ poly(initializer_list<mint> il);
 
 - `void poly::ntt(int op)`; 是 NTT：$op=1$ 是 DFT，$op=-1$ 是 IDFT。实现是纯暴力。
 
-- `poly concalc(int n, vector<poly> vec, const function<mint(vector<mint>)>& func);` 这个接口主要用于实现牛顿迭代，$n$ 是最高次数，$vec$ 是若干多项式，$func$ 是一个计算的回调函数，如计算多项式乘法是这样的：
+- `poly concalc(int n, vector<poly> vec, const function<mint(vector<mint>)>& func);` 这个接口主要用于实现牛顿迭代，$n$ 是答案最大项数，$vec$ 是若干多项式，$func$ 是一个计算的回调函数，如计算多项式乘法是这样的：
   - `concalc(len, {a, b}, [](vector<mint> vec) { return vec[0] * vec[1]; });`
   - 即计算 $a\cdot b$。$a, b$ 都是多项式。
+  - 最终返回一个长为 `glim(n)` 的多项式。
 
 
 ## 多项式单点求值

@@ -1,3 +1,4 @@
+#pragma once
 #include "header.h"
 template <class T>
 using must_int = enable_if_t<is_integral<T>::value, int>;
@@ -34,7 +35,7 @@ struct modint {
   modint &operator/=(const modint &rhs) { return *this *= rhs.inv(); }
   modint inv() const {
     assert(v);
-    static int lim = 1 << 21;
+    static unsigned lim = 1 << 21;
     static vector<modint> inv{0, 1};
     if (v >= lim) return qpow(*this, mod - 2);
     inv.reserve(v + 1);
