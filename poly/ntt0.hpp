@@ -1,6 +1,6 @@
 #pragma once
-#include "header.h"
 #include "base.hpp"
+#include "header.h"
 template <class mint, int g = 3>
 void ntt(vector<mint>& a, int op) {
   static vector<mint> wns;
@@ -32,7 +32,8 @@ void ntt(vector<mint>& a, int op) {
   }
 }
 template <class mint, int g = 3>
-vector<mint> concalc(int n, vector<vector<mint>> vec, const function<mint(vector<mint>)>& func) {
+vector<mint> concalc(int n, vector<vector<mint>> vec,
+                     const function<mint(vector<mint>)>& func) {
   int lim = glim(n);
   int m = vec.size();
   for (int j = 0; j < m; j++) vec[j].resize(lim), ntt(vec[j], 1);

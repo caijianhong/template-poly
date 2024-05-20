@@ -1,9 +1,18 @@
-#include "header.h"
-#include "modint.hpp"
-#include "base.hpp"
-#include "arithmetic.hpp"
+#include <bits/stdc++.h>
+#include "../../poly/all"
+using namespace std;
+#ifdef LOCAL
+#define debug(...) fprintf(stderr, ##__VA_ARGS__)
+#else
+#define endl "\n"
+#define debug(...) void(0)
+#endif
+typedef long long LL;
 using mint = modint<998244353>;
 int main() {
+#ifndef LOCAL
+  cin.tie(nullptr)->sync_with_stdio(false);  
+#endif
   vector<mint> a{1, 1, 4, 5, 1, 4}, b{1, 9, 1, 9, 8, 1, 0};
   assert(getValue(a, mint(0)) == 1);
   assert(getValue(a, mint(1)) == 16);

@@ -1,6 +1,6 @@
 #pragma once
-#include "header.h"
 #include "base.hpp"
+#include "header.h"
 template <class mint, int g>
 struct ntt_env {
   vector<mint> w{1};
@@ -42,7 +42,8 @@ struct ntt_env {
   }
 };
 template <class mint, int g = 3>
-vector<mint> concalc(int n, vector<vector<mint>> vec, const function<mint(vector<mint>)>& func) {
+vector<mint> concalc(int n, vector<vector<mint>> vec,
+                     const function<mint(vector<mint>)> &func) {
   static ntt_env<mint, g> ntt;
   int lim = glim(n);
   int m = vec.size();
