@@ -1,5 +1,5 @@
 # template-poly
-The repository is still a **work in progress**.
+The branch is stable. 这是一个可以使用的稳定的版本，最新版本是 main。
 
 OI 中的多项式模板，使用 `std::vector<modint<998244353>>` 实现。目前已实现：
 - modint
