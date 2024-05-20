@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
-#include "all"
+#include "modint.hpp"
+#include "divide.hpp"
 using namespace std;
 #ifdef LOCAL
 #define debug(...) fprintf(stderr, ##__VA_ARGS__)

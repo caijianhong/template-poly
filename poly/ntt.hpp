@@ -9,4 +9,3 @@
 #elif
 #error "invaild argument: NTT_VERSION"
 #endif
-

@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
-#include "../../poly/all"
+#include "modint.hpp"
+#include "arithmetic.hpp"
 using namespace std;
 #ifdef LOCAL
 #define debug(...) fprintf(stderr, ##__VA_ARGS__)

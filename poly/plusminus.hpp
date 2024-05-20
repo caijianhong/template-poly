@@ -14,9 +14,9 @@ vector<mint> operator-(vector<mint> a, const vector<mint>& b) {
 }
 template <class mint>
 vector<mint> operator+=(vector<mint>& a, const vector<mint>& b) {
-    return a = move(a + b);
+  return a = move(a + b);
 }
 template <class mint>
 vector<mint> operator-=(vector<mint>& a, const vector<mint>& b) {
-    return a = move(a - b);
+  return a = move(a - b);
 }

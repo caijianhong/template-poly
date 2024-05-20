@@ -5,6 +5,6 @@ tar = $(patsubst %.hpp, %.gch, $(src))
 .PHONY: clean ALL
 ALL: $(tar)
 clean:
-	clangf $(src)
+	clang-format -i $(src)
 	find . -name '*~' | xargs rm -f
 	rm -f $(tar) .depend
