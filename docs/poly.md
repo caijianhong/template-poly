@@ -553,13 +553,13 @@ mint linear_rec(poly a, poly f, T n);
 
 我们只需要构造 $F(x), G(x)$ 使得 $[x^n]\dfrac{F(x)}{G(x)}=a_n$ 即可。以下记 $F_i=[x^i]F(x)$。
 
-为了使得 $F(x)$ 的项数足够小，考虑钦定 $F_i=0$ 当 $i\geq k$ 时。那么根据定义：
+为了使得 $F(x)$ 的项数足够小，考虑钦定 $F_i=0$ 当 $i>k$ 时。那么根据定义：
 $$
 F(x)=G(x)a(x)\implies 0=\sum_{j=0}^i G_ja_{i-j}\implies G_0a_i=\sum_{j=1}^i-G_ja_{i-j}
 $$
 使得 $G_0=1, G_i=-f_i(1\leq i\leq k)$，其他项都是零。
 
-又因为 $F(x)=G(x)a(x)\bmod {x^k}$，于是暴力计算 $F(x)$。
+又因为 $F(x)=G(x)a(x)\pmod {x^k}$，于是暴力计算 $F(x)$。
 
 然后应用 Bostan-Mori 算法即可。即我们想要算的是以下东西：
 $$
