@@ -4,33 +4,23 @@
 
 ## 杂项
 
-数域为 $\mathbb F_{998244353}$，所以定义了 `mint` 为 `modint<998244353>`。
+数域为 $\mathbb F_{998244353}$，以下假装定义了 `mint` 为 `modint<998244353>`，并 `typedef vector<mint> poly`（代码中没有这两个定义）。
 
-`poly` 是多项式的类型，从 `std::vector<mint>` 继承而来。`poly` 的构造函数如下：
+代码中 `mint` 是模板参数，可以同时在模板参数里面塞入原根（计划去掉），如 multiple 的完整定义是：
 
 ```cpp
-poly();
-explicit poly(int n); // n 为项数，n 个 0
-poly(const vector<mint>& vec); // vec[0] 为常数项，vec[1] 为一次项，以此类推
-poly(initializer_list<mint> il);
+template <class mint, int g = 3>
+vector<mint> multiple(const vector<mint>& a, const vector<mint>& b);
 ```
 
-以及
+这使得可以 `multiple<998244353, 3>(a, b)` 传入真实的原根，主要用于应对未知模数，所有涉及 ntt 的操作都有这个模板参数。
 
-- `poly& poly::cut(int lim);` 效果等同于截断到 $lim$ 项或补零至 $lim$ 项后返回自己。
-
-- `istream& operator>>(istream& is, poly& a);`  输入一个多项式，输入恰好 `a.size()` 个 modint。
-
-- `ostream& operator<<(ostream& os, const poly& a);` 输出一个多项式，以空格分割，最后没有换行。
-
-- `poly operator<<(poly a, const int& k);` 和`poly operator>>(poly a, const int& k);` 分别是乘 $x^k$ 和除 $x^k$（$<k$ 次项舍弃）。有对应的 `operator<<=` 和 `operator>>=`。
-
-- `void poly::ntt(int op)`; 是 NTT：$op=1$ 是 DFT，$op=-1$ 是 IDFT。实现是纯暴力。
-
+- `poly cut(poly vec, int lim);` 效果等同于截断到 $lim$ 项或补零至 $lim$ 项后返回自己（就是 `vector<mint>::resize()`）
 - `poly concalc(int n, vector<poly> vec, const function<mint(vector<mint>)>& func);` 这个接口主要用于实现牛顿迭代，$n$ 是答案最大项数，$vec$ 是若干多项式，$func$ 是一个计算的回调函数，如计算多项式乘法是这样的：
   - `concalc(len, {a, b}, [](vector<mint> vec) { return vec[0] * vec[1]; });`
   - 即计算 $a\cdot b$。$a, b$ 都是多项式。
   - 最终返回一个长为 `glim(n)` 的多项式。
+  - 使用 ntt 实现。
 
 
 ## 多项式单点求值
@@ -40,7 +30,7 @@ poly(initializer_list<mint> il);
 给出有限项的多项式 $F(x)$ 和 $x_0$，求 $F(x_0)$。
 
 ```cpp
-mint poly::operator()(const mint& x) const;
+mint getValue()(const poly& vec, const mint& x);
 ```
 
 ### solution
@@ -56,16 +46,13 @@ mint poly::operator()(const mint& x) const;
 ```cpp
 poly operator+(poly a, const poly& b);
 poly operator-(poly a, const poly& b);
-poly operator*(poly a, const mint& k);
-poly operator*(const mint& k, poly a);
-poly operator/(poly a, const mint& k);
 ```
 
-有对应的 `operator+=`，`operator-=`，`operator*=` 和 `operator/=`。
+有对应的 `operator+=`，`operator-=`。
 
 ### solution
 
-对应位相加、相减、数乘。$O(n)$。
+对应位相加、相减。$O(n)$。
 
 ## 多项式乘法
 
@@ -74,10 +61,8 @@ poly operator/(poly a, const mint& k);
 给出多项式 $F(x), G(x)$，求 $H(x)=F(x)G(x)$。
 
 ```cpp
-poly operator*(const poly& a, const poly& b);
+poly multiple(const poly& a, const poly& b);
 ```
-
-有对应的 `operator*=`。
 
 ### solution
 
@@ -88,6 +73,7 @@ poly operator*(const poly& a, const poly& b);
 便于记背。
 
 ```cpp
+// ntt0.hpp
 typedef modint<998244353> mint;
 int glim(const int& x) { return 1 << (32 - __builtin_clz(x - 1)); }
 int bitctz(const int& x) { return __builtin_ctz(x); }
@@ -125,7 +111,9 @@ void poly::ntt(int op) {
 }
 ```
 
+### dit-dif 优化
 
+[再探 FFT - DIT 与 DIF，另种推导和优化 – Charles Wu的博客](https://charleswu.site/archives/3065)。
 
 ## 多项式乘法逆
 
@@ -199,15 +187,12 @@ $$
 
 给定一个 $n$ 次多项式 $F(x)$ 和一个 $m$ 次多项式  $G(x)$ ，请求出多项式 $Q(x)$, $R(x)$，满足以下条件：
 
- - $Q(x)$ 次数为 $n-m$，$R(x)$ 次数小于 $m$（钦定，$R(x)$ 的次数恰好为 $m-1$）
- - $F(x) = Q(x) * G(x) + R(x)$
+ - $Q(x)$ 次数为 $n-m$，$R(x)$ 次数小于 $m$（钦定，$R(x)$ 的次数恰好为 $m-1$）。
+ - $F(x) = Q(x) * G(x) + R(x)$。
 
 ```cpp
-poly operator/(poly a, poly b);
-poly operator%(const poly& a, const poly& b);
+pair<poly, poly> divide(poly a, poly b); // {Q(x), R(x)}
 ```
-
-有对应的 `operator/=` 和 `operator%=`。
 
 ### solution
 
@@ -387,6 +372,10 @@ a^{p-1}\equiv 1\pmod p
 $$
 
 所以将常数项乘回去时，$k$ 要对 $p-1$ 取模，即最终的多项式要乘 $F^{k\bmod (p-1)}(0)$ 再乘上 $x$ 的若干次方。
+
+---
+
+（以下内容还未实现）
 
 ## 多项式开根
 

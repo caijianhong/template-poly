@@ -120,7 +120,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Expander")
     parser.add_argument("source", help="Source File")
     parser.add_argument("-c", "--console", action="store_true", help="Print to Console")
-    parser.add_argument("--lib", help="Path to Atcoder Library")
+    parser.add_argument("--lib", help="Path to Poly Library")
     parser.add_argument("-o", help="Output File", default='combined.cpp')
     for switch in lib_switchs:
         name = switch['name']

@@ -1,32 +1,40 @@
 # template-poly
-The repository is still a **work in progress**.
+The branch is **developing**.（此分支是开发分支，稳定版本是 `stable` 分支）
 
-OI 中的多项式模板，使用 `std::vector<modint<998244353>>` 实现。目前已实现：
-- modint
-- 单点求值
-- NTT
-- 多项式加法、减法、数乘
+OI 中的多项式模板，使用 `std::vector<modint<998244353>>` 实现。
+
+## 已实现
+
+- `modint`
+- 多项式单点求值
+- NTT（可选择是否使用 dit-dif 优化）
+- 多项式加法、减法
 - 多项式乘法
 - 多项式乘法逆
+- 多项式除法、取模
+- 多项式对数函数
+- 多项式指数函数
+- 多项式快速幂
+
+## 未实现
+
+- 多项式开根
 - 分式 $f(x)/g(x)$ 的第 $n$ 项
 - 常系数齐次线性递推
 - 求最短递推式的 BM 算法
 - $O(n^2)$ 的拉格朗日插值
-- 多项式对数函数
-- 多项式指数函数
-- 多项式快速幂
-- 多项式除法、取模
-- 多项式开根
+- 多项式复合、多点求值、快速插值（这些不知道有没有用）
 
-目前未实现：
-- 文档
-- 接口（`.h` 文件 required）
-- tester 需要调整一下，需要测更多数据
-- 多项式复合、多点求值、快速插值这些不知道有没有用
-- 看到隔壁有人写斯特林数求值
-- ~~多项式牛顿迭代需要一个通用的接口，没想好怎么写~~ 不用写
-- ~~这玩意已经 10 KB 了考虑拆分一下，可以参考隔壁 atcoder library 怎么搞的~~
+## 使用方法
+
+见 `docs/poly.md`。
+
+将 `poly/` 文件夹放于代码同一目录，可以在代码中 `#include "poly/all"`获得所有功能，可以 `#include "poly/qpow.hpp"` 获得多项式快速幂，具体可以写的可以参见 `docs/tree.md`。
+
+若在本地可以在编译选项中加入 `-I.` 以编译，或者可以使用 `test/expander.py` 将所有 `include` 展开，使用方法
 
 ```sh
-g++ poly.cpp -o main -std=c++14
+$ ./expander.py main.cpp
 ```
+
+将 `main.cpp` 展开到 `combined.cpp`，其它选项可以 `./expander.py --help` 查看。注意有一些选项可以在这个命令行里面改，见 `docs/tree.md`。
