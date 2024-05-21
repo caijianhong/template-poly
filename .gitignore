@@ -38,3 +38,7 @@ main
 # Vim files
 *~
 
+# 000
+docs/poly000.md
+poly/poly000.cpp
+test/test000/*
