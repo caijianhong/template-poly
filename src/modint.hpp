@@ -59,10 +59,7 @@ struct modint {
   friend modint operator-(modint lhs, const modint &rhs) { return lhs -= rhs; }
   friend modint operator*(modint lhs, const modint &rhs) { return lhs *= rhs; }
   friend modint operator/(modint lhs, const modint &rhs) { return lhs /= rhs; }
-  friend bool operator==(const modint &lhs, const modint &rhs) {
-    return lhs.v == rhs.v;
-  }
-  friend bool operator!=(const modint &lhs, const modint &rhs) {
-    return lhs.v != rhs.v;
-  }
+  bool operator==(const modint &rhs) const { return v == rhs.v; }
+  bool operator!=(const modint &rhs) const { return v != rhs.v; }
+  explicit operator bool() const { return v != 0; }
 };
