@@ -35,7 +35,7 @@ vector<mint> operator*(const T& b, vector<mint> a) {
 }
 template <class mint, class T>
 vector<mint>& operator/=(vector<mint>& a, const T& b) {
-  return a *= 1 / b;
+  return a *= mint{1} / b;
 }
 template <class mint, class T>
 vector<mint> operator/(vector<mint> a, const T& b) {
