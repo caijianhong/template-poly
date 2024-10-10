@@ -20,24 +20,24 @@ template <class mint>
 vector<mint> operator-=(vector<mint>& a, const vector<mint>& b) {
   return a = move(a - b);
 }
-template <class mint>
-vector<mint>& operator*=(vector<mint>& a, const mint& b) {
+template <class mint, class T>
+vector<mint>& operator*=(vector<mint>& a, const T& b) {
   for (int i = 0; i < (int)a.size(); i++) a[i] *= b;
   return a;
 }
-template <class mint>
-vector<mint> operator*(vector<mint> a, const mint& b) {
+template <class mint, class T>
+vector<mint> operator*(vector<mint> a, const T& b) {
   return a *= b;
 }
-template <class mint>
-vector<mint> operator*(const mint& b, vector<mint> a) {
+template <class mint, class T>
+vector<mint> operator*(const T& b, vector<mint> a) {
   return a *= b;
 }
-template <class mint>
-vector<mint>& operator/=(vector<mint>& a, const mint& b) {
+template <class mint, class T>
+vector<mint>& operator/=(vector<mint>& a, const T& b) {
   return a *= 1 / b;
 }
-template <class mint>
-vector<mint> operator/(vector<mint> a, const mint& b) {
+template <class mint, class T>
+vector<mint> operator/(vector<mint> a, const T& b) {
   return a /= b;
 }
