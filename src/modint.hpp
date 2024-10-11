@@ -37,7 +37,7 @@ struct modint {
     assert(v);
     static unsigned lim = 1 << 21;
     static vector<modint> inv{0, 1};
-    if (v >= lim) return (mod - mod / v) * modint{mod % v}.inv();
+    if (v >= lim) return qpow(*this, mod - 2);
     inv.reserve(v + 1);
     while (v >= inv.size()) {
       int m = inv.size();
