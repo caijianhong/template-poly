@@ -35,9 +35,9 @@ constexpr tuple<T, T, T> exgcd(T a, T b) {
   T x1 = 1, y1 = 0, x2 = 0, y2 = 1;
   while (b) {
     auto c = a / b;
-    tie(a, b) = make_pair(b, a - c * b);
-    tie(x1, x2) = make_pair(x2, x1 - c * x2);
-    tie(y1, y2) = make_pair(y2, y1 - c * y2);
+    swap(a, b), b -= c * a;
+    swap(x1, x2), x2 -= c * x1;
+    swap(y1, y2), y2 -= c * y1;
   }
   return make_tuple(x1, y1, a);
 }
