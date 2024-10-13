@@ -1,4 +1,5 @@
 #pragma once
+#include "header.h"
 namespace poly_internal {
 using LL = long long;
 constexpr bool isprime(int n) {
@@ -28,5 +29,16 @@ constexpr int pmtroot(int p) {
     for (int i = 0; i < cnt && flag; i++) flag &= qpow(g, (p - 1) / dvs[i], p) != 1;
     if (flag) return g;
   }
+}
+template <class T>
+constexpr tuple<T, T, T> exgcd(T a, T b) {
+  T x1 = 1, y1 = 0, x2 = 0, y2 = 1;
+  while (b) {
+    auto c = a / b;
+    tie(a, b) = make_pair(b, a - c * b);
+    tie(x1, x2) = make_pair(x2, x1 - c * x2);
+    tie(y1, y2) = make_pair(y2, y1 - c * y2);
+  }
+  return make_tuple(x1, y1, a);
 }
 }; // namespace poly_internal
