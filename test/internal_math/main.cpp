@@ -18,8 +18,13 @@ int main() {
   cout << isprime(11) << endl;
   cout << qpow(9, 2, 10) << endl;
   cout << isprime(998244353) << endl;
-  cout << pmtroot(998244353) << endl;
-  cout << atcoder::internal::primitive_root<998244353> << endl;
+  for (int p : {2, 
+167772161,
+469762049,
+754974721,
+998244353}) 
+  assert(pmtroot(p) ==
+  atcoder::internal::primitive_root_constexpr(p));
   return 0;
 }
 
