@@ -1,17 +1,12 @@
 #pragma once
 #include "header.h"
-template <class T>
-using must_int = enable_if_t<is_integral<T>::value, int>;
 template <unsigned umod>
 struct modint {
   static constexpr int mod = umod;
   unsigned v;
-  modint() : v(0) {}
-  template <class T, must_int<T> = 0>
-  modint(T _v) {
-    int x = _v % (int)umod;
-    v = x < 0 ? x + umod : x;
-  }
+  modint() = default;
+  template <class T, enable_if_t<is_integral<T>::value, int> = 0>
+    modint(const T& _y) : v(_y % mod + (is_signed<T>() && _y < 0 ? mod : 0)) {}
   modint operator+() const { return *this; }
   modint operator-() const { return modint() - *this; }
   friend int raw(const modint &self) { return self.v; }
