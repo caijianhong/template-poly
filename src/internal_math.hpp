@@ -46,18 +46,18 @@ constexpr tuple<T, T, T> exgcd(T a, T b) {
 mt19937 rng{random_device{}()};
 template <class mint>
 mint sqrt(const mint &c) {
-  auto euler = [&](const mint &c) -> mint {
-    return qpow(c, (mint::mod - 1) >> 1);
+  auto euler = [&](const mint &x) -> mint {
+    return qpow(x, (mint::mod - 1) >> 1);
   };
   if (raw(c) <= 1) return c;
   if (euler(c) != 1) throw "No solution!";
-  mint a = rng();
-  while (euler(a * a - c) == 1) a = rng();
+  mint w = rng();
+  while (euler(w * w - c) == 1) w = rng();
   struct number {
     mint x, y;
   };
   auto mul = [&](const number &lhs, const number &rhs) -> number {
-    return {lhs.x * rhs.x + lhs.y * rhs.y * (a * a - c),
+    return {lhs.x * rhs.x + lhs.y * rhs.y * (w * w - c),
             lhs.x * rhs.y + lhs.y * rhs.x};
   };
   auto qpow = [&](number a, int b) -> number {
@@ -66,7 +66,7 @@ mint sqrt(const mint &c) {
       if (b & 1) r = mul(r, a);
     return r;
   };
-  mint ret = qpow({a, 1}, (mint::mod + 1) >> 1).x;
+  mint ret = qpow({w, 1}, (mint::mod + 1) >> 1).x;
   return min(raw(ret), raw(-ret));
 }
 };  // namespace poly_internal
