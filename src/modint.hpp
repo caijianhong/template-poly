@@ -46,6 +46,7 @@ struct modint {
   template <class T, must_int<T> = 0>
   friend modint qpow(modint a, T b) {
     modint r = 1;
+    assert(b >= 0);
     for (; b; b >>= 1, a *= a)
       if (b & 1) r *= a;
     return r;
