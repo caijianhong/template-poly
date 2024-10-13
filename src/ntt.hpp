@@ -16,7 +16,7 @@ template <class mint>
 valarray<mint> dif(const vector<mint>& src, int n) {
   static vector<mint> w{1};
   init(w, n);
-  valarray<mint> a(n, 0);
+  valarray<mint> a(0, n);
   copy(src.begin(), src.end(), begin(a));
   for (int len = n, k = n >> 1; k >= 1; len = k, k >>= 1) {
     for (int i = 0, t = 0; i < n; i += len, t++) {
@@ -28,9 +28,11 @@ valarray<mint> dif(const vector<mint>& src, int n) {
   }
   return a;
 }
-template <class mint>
-vector<mint> dit(const valarray<mint> &src, int m) {
-  int n = src.size();
+template <class T>
+auto dit(T&& _src, int m) {
+  using mint = typename T::value_type;
+  valarray<mint> src = _src;
+  int n = (int)src.size();
   static vector<mint> w{1};
   init(w, n);
   vector<mint> a(begin(src), end(src));
@@ -47,4 +49,8 @@ vector<mint> dit(const valarray<mint> &src, int m) {
   reverse(a.begin() + 1, a.end());
   a.resize(m);
   return a;
+}
+template <class Func, class... Ts>
+auto concalc(int len, Func&& func, Ts... args) {
+  return dit(func(dif(args, len)...), len);
 }
