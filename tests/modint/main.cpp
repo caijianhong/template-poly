@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+#include "internal_math.hpp"
+#include "atcoder/internal_math.hpp"
+using namespace std;
+#ifdef LOCAL
+#define debug(...) fprintf(stderr, ##__VA_ARGS__)
+#else
+#define endl "\n"
+#define debug(...) void(0)
+#endif
+using LL = long long;
+int main() {
+#ifndef LOCAL
+  cin.tie(nullptr)->sync_with_stdio(false);
+#endif
+  using namespace poly_internal;
+  cout << isprime(10) << endl;
+  cout << isprime(11) << endl;
+  cout << qpow(9, 2, 10) << endl;
+  cout << isprime(998244353) << endl;
+  cout << pmtroot(998244353) << endl;
+  cout << atcoder::internal::primitive_root<998244353> << endl;
+  return 0;
+}
+
