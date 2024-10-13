@@ -51,5 +51,6 @@ int main() {
 
     // get mod
     assert(mint::mod == 11);
+    assert(5 * (modint<12>{1} / 5) == 1);
 }
 
