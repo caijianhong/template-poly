@@ -6,6 +6,7 @@ template <class mint>
 vector<mint> wt;
 template <class mint>
 vector<mint>& init(int n) {
+  assert((n & (n - 1)) == 0);
   static constexpr int g = internal::pmtroot(mint::mod);
   auto& w = wt<mint>;
   if (w.empty()) w = {1};
@@ -19,7 +20,6 @@ vector<mint>& init(int n) {
 }
 template <class mint>
 valarray<mint> dif(const vector<mint>& src, int n) {
-  assert((n & (n - 1)) == 0);
   auto& w = init<mint>(n);
   valarray<mint> a;
   a.resize(n, 0);
