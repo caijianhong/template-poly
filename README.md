@@ -37,3 +37,13 @@ $ ./expander.py main.cpp
 ```
 
 将 `main.cpp` 展开到 `combined.cpp`，其它选项可以 `./expander.py --help` 查看。注意有一些选项可以在这个命令行里面改，见 `docs/tree.md`。
+
+## 说明
+1. 求逆元部分，若模数为质数，则预处理 $2^{21}$ 以内的数的逆元，大于 $2^{21}$ 的数的逆元使用线性递推公式快速下降至范围内，回避了 exgcd 或快速幂。
+2. ntt 部分使用 dit-dif 优化，同时返回值改为 valarray<mint>，可以直接对返回值进行线性运算（如乘法 `dit(dif(a, len) * dif(b, len))`）
+3. 编译期质数原根
+4. 多项式求逆使用循环卷积优化
+
+todo：分治 ntt 实现 exp；提供使用蒙哥马利约减的 modint；任意模数 modint 及对应操作。
+
+使用例：<https://loj.ac/s/2177952>
