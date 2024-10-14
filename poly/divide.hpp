@@ -5,25 +5,28 @@
 #include "poly/plusminus.hpp"
 namespace poly {
 template <class mint>
-vector<mint> operator/(vector<mint> a, vector<mint> b) {
-  if (a.size() < b.size()) return {};
+vector<mint>& operator/=(vector<mint>& a, vector<mint> b) {
+  if (a.size() < b.size()) return a.clear(), a;
   int rlen = a.size() - b.size() + 1;
   reverse(a.begin(), a.end());
   reverse(b.begin(), b.end());
-  auto d = cut(a * getInv(b, rlen), rlen);
-  reverse(d.begin(), d.end());
-  return d;
+  a *= getInv(b, rlen);
+  a.resize(rlen);
+  reverse(a.begin(), a.end());
+  return a;
 }
 template <class mint>
-vector<mint> operator%(const vector<mint>& a, const vector<mint>& b) {
-  return cut(a - (a / b) * b, b.size() - 1);
+vector<mint>& operator%=(vector<mint>& a, const vector<mint>& b) {
+  a -= (a / b) * b;
+  a.resize(b.size() - 1);
+  return a;
 }
 template <class mint>
-vector<mint> operator/=(vector<mint> a, const vector<mint>& b) {
-  return a = a / b;
+vector<mint> operator/(vector<mint> a, const vector<mint>& b) {
+  return a /= b;
 }
 template <class mint>
-vector<mint> operator%=(vector<mint> a, const vector<mint>& b) {
-  return a = a % b;
+vector<mint> operator%(vector<mint> a, const vector<mint>& b) {
+  return a %= b;
 }
 }  // namespace poly
