@@ -18,4 +18,12 @@ template <class mint>
 vector<mint> operator%(const vector<mint>& a, const vector<mint>& b) {
   return cut(a - (a / b) * b, b.size() - 1);
 }
+template <class mint>
+vector<mint> operator/=(vector<mint> a, const vector<mint>& b) {
+  return a = a / b;
+}
+template <class mint>
+vector<mint> operator%=(vector<mint> a, const vector<mint>& b) {
+  return a = a % b;
+}
 }  // namespace poly

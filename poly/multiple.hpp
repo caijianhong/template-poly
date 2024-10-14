@@ -6,4 +6,8 @@ vector<mint> operator*(const vector<mint>& a, const vector<mint>& b) {
   int rlen = (int)(a.size() + b.size() - 1), len = glim(rlen);
   return cut(dit(dif(a, len) * dif(b, len)), rlen);
 }
+template <class mint>
+vector<mint> operator*=(vector<mint> a, const vector<mint>& b) {
+  return a = a * b;
+}
 }  // namespace poly
