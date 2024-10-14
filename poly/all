@@ -1,3 +1,7 @@
 #include "poly/modint.hpp"
 #include "poly/base.hpp"
 #include "poly/arithmetic.hpp"
+#include "poly/divide_at.hpp"
+#include "poly/linear_rec.hpp"
+#include "poly/lagrange.hpp"
+#include "poly/BM.hpp"

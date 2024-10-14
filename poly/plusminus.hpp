@@ -32,21 +32,39 @@ vector<mint>& operator/=(vector<mint>& a, const T& b) {
   return a *= mint{1} / b;
 }
 template <class mint>
-vector<mint> operator+(vector<mint> a, const vector<mint>& b) { return a += b; }
+vector<mint> operator+(vector<mint> a, const vector<mint>& b) {
+  return a += b;
+}
 template <class mint>
-vector<mint> operator-(vector<mint> a, const vector<mint>& b) { return a -= b; }
+vector<mint> operator-(vector<mint> a, const vector<mint>& b) {
+  return a -= b;
+}
 template <class mint, class T>
-vector<mint> operator+(vector<mint> a, const T& b) { return a += b; }
+vector<mint> operator+(vector<mint> a, const T& b) {
+  return a += b;
+}
 template <class mint, class T>
-vector<mint> operator-(vector<mint> a, const T& b) { return a -= b; }
+vector<mint> operator-(vector<mint> a, const T& b) {
+  return a -= b;
+}
 template <class mint, class T>
-vector<mint> operator+(const T& b, vector<mint> a) { return a += b; }
+vector<mint> operator+(const T& b, vector<mint> a) {
+  return a += b;
+}
 template <class mint, class T>
-vector<mint> operator-(const T& b, vector<mint> a) { return a *= -1, a += b; }
+vector<mint> operator-(const T& b, vector<mint> a) {
+  return a *= -1, a += b;
+}
 template <class mint, class T>
-vector<mint> operator*(vector<mint> a, const T& b) { return a *= b; }
+vector<mint> operator*(vector<mint> a, const T& b) {
+  return a *= b;
+}
 template <class mint, class T>
-vector<mint> operator*(const T& b, vector<mint> a) { return a *= b; }
+vector<mint> operator*(const T& b, vector<mint> a) {
+  return a *= b;
+}
 template <class mint, class T>
-vector<mint> operator/(vector<mint> a, const T& b) { return a /= b; }
+vector<mint> operator/(vector<mint> a, const T& b) {
+  return a /= b;
+}
 }  // namespace poly

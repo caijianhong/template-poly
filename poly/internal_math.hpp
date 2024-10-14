@@ -4,7 +4,7 @@ namespace poly {
 namespace internal {
 constexpr bool isprime(int n) {
   if (n <= 2) return n == 2;
-  for (int i = 2; i * i <= n; i++)
+  for (int i = 2; i <= n / i; i++)
     if (n % i == 0) return false;
   return true;
 }
@@ -19,7 +19,7 @@ constexpr LL qpow(LL a, LL b, int mod) {
 // @param p must be prime
 constexpr int pmtroot(int p) {
   int dvs[20]{}, cnt = 0, n = p - 1;
-  for (int i = 2; i * i <= n; i++) {
+  for (int i = 2; i <= n / i; i++) {
     if (n % i) continue;
     dvs[cnt++] = i;
     while (n % i == 0) n /= i;
@@ -43,32 +43,6 @@ constexpr std::tuple<T, T, T> exgcd(T a, T b) {
     std::swap(y1, y2), y2 -= c * y1;
   }
   return std::make_tuple(x1, y1, a);
-}
-std::mt19937 rng{std::random_device{}()};
-template <class mint>
-mint sqrt(const mint &c) {
-  auto euler = [&](const mint &x) -> mint {
-    return qpow(x, (mint::mod - 1) >> 1);
-  };
-  if (raw(c) <= 1) return c;
-  if (euler(c) != 1) throw "No solution!";
-  mint w = rng();
-  while (euler(w * w - c) == 1) w = rng();
-  struct number {
-    mint x, y;
-  };
-  auto mul = [&](const number &lhs, const number &rhs) -> number {
-    return {lhs.x * rhs.x + lhs.y * rhs.y * (w * w - c),
-            lhs.x * rhs.y + lhs.y * rhs.x};
-  };
-  auto qpow = [&](number a, int b) -> number {
-    number r = {1, 0};
-    for (; b; b >>= 1, a = mul(a, a))
-      if (b & 1) r = mul(r, a);
-    return r;
-  };
-  mint ret = qpow({w, 1}, (mint::mod + 1) >> 1).x;
-  return std::min(raw(ret), raw(-ret));
 }
 }  // namespace internal
 }  // namespace poly

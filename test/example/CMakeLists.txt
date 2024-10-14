@@ -31,3 +31,4 @@ add_executable(getexp getexp.cpp)
 
 add_executable(test test.cpp)
 
+add_executable(linear_rec linear_rec.cpp)

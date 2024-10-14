@@ -16,10 +16,10 @@ vector<mint> qpow_base(vector<mint> a, int km, int ke, int lim) {
 }
 template <class mint>
 vector<mint> qpow(vector<mint> a, LL k, int lim) {
-  int i =
-      std::find_if(a.begin(), a.end(), [](mint x) { return x != 0; }) - a.begin();
+  auto chk = [](mint x) { return x != 0; };
+  int i = (int)(std::find_if(a.begin(), a.end(), chk) - a.begin());
   if (i == (int)a.size() || (i >= 1 && (k >= lim || i * k >= lim)))
-    return vector<mint>(lim);
+    return vector<mint>(lim, 0);
   if (i) a.erase(a.begin(), a.begin() + i);
   auto ret = qpow_base(a, k % mint::mod, k % (mint::mod - 1), lim);
   if (i) ret.insert(ret.begin(), i * k, 0);
@@ -27,18 +27,18 @@ vector<mint> qpow(vector<mint> a, LL k, int lim) {
 }
 template <class mint>
 vector<mint> qpow(vector<mint> a, std::string k, int lim) {
-  int i =
-      std::find_if(a.begin(), a.end(), [](mint x) { return x != 0; }) - a.begin();
-  if (i == (int)a.size() ||
-      (i >= 1 && (k.size() > std::to_string(lim).size() || i * stoll(k) >= lim)))
-    return vector<mint>(lim);
+  auto chk = [](mint x) { return x != 0; };
+  int i = (int)(std::find_if(a.begin(), a.end(), chk) - a.begin());
+  if (i == (int)a.size() || (i >= 1 && (k.size() > std::to_string(lim).size() ||
+                                        i * stoll(k) >= lim)))
+    return vector<mint>(lim, 0);
   if (i) a.erase(a.begin(), a.begin() + i);
   LL km = 0, ke = 0;
-  for (int i = 0; i < (int)k.size(); i++) {
-    km = (km * 10 + k[i] - '0') % mint::mod;
-    ke = (ke * 10 + k[i] - '0') % (mint::mod - 1);
+  for (char ch : k) {
+    km = (km * 10 + ch - '0') % mint::mod;
+    ke = (ke * 10 + ch - '0') % (mint::mod - 1);
   }
-  auto ret = qpow_base(a, km, ke, lim);
+  auto ret = qpow_base(a, (int)km, (int)ke, lim);
   if (i) ret.insert(ret.begin(), i * stoll(k), 0);
   return ret;
 }
