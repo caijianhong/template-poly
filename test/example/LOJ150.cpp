@@ -1,12 +1,11 @@
 #include "poly/all"
 #include <iostream>
-using namespace poly;
 using namespace std;
 int main() {
 #ifndef LOCAL
   cin.tie(nullptr)->sync_with_stdio(false);
 #endif
-  using mint = modint<998244353>;
+  using mint = poly::modint<998244353>;
   using poly = vector<mint>;
   int n;
   string k;

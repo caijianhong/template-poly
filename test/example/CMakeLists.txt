@@ -29,3 +29,5 @@ add_executable(multiple multiple.cpp)
 
 add_executable(getexp getexp.cpp)
 
+add_executable(test test.cpp)
+
