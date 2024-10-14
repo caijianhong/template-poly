@@ -26,7 +26,7 @@ mint getValue(const vector<mint>& a, const mint& x) {
 }
 template <class mint>
 vector<mint> cut(vector<mint> a, int lim) {
-  a.resize(lim, 0);
+  a.resize(lim);
   return a;
 }
 }  // namespace poly

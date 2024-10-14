@@ -7,7 +7,7 @@ namespace poly {
 template <class mint>
 vector<mint>& operator/=(vector<mint>& a, vector<mint> b) {
   if (a.size() < b.size()) return a.clear(), a;
-  int rlen = a.size() - b.size() + 1;
+  int rlen = (int)(a.size() - b.size() + 1);
   reverse(a.begin(), a.end());
   reverse(b.begin(), b.end());
   a *= getInv(b, rlen);
