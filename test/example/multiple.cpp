@@ -1,6 +1,8 @@
 #include "poly/modint.hpp"
 #include "poly/multiple.hpp"
-
+#include <iostream>
+using namespace std;
+using namespace poly;
 using mint = modint<998244353>;
 int main() {
 #ifndef LOCAL

@@ -1,5 +1,5 @@
 #pragma once
-#include "poly/header.h"
+namespace poly {
 template <class mint>
 vector<mint> operator+(vector<mint> a, const vector<mint>& b) {
   if (a.size() < b.size()) a.resize(b.size());
@@ -41,3 +41,4 @@ template <class mint, class T>
 vector<mint> operator/(vector<mint> a, const T& b) {
   return a /= b;
 }
+}  // namespace poly

@@ -1,5 +1,5 @@
 #pragma once
-#include "poly/header.h"
+namespace poly {
 template <class mint>
 vector<mint> getDev(vector<mint> a) {
   a.erase(a.begin());
@@ -12,3 +12,4 @@ vector<mint> getInt(vector<mint> a) {
   for (int i = 1; i < (int)a.size(); i++) a[i] /= i;
   return a;
 }
+}  // namespace poly

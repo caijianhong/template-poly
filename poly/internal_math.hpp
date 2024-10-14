@@ -1,7 +1,7 @@
 #pragma once
-#include "poly/header.h"
-namespace poly_internal {
-using LL = long long;
+#include "poly/base.hpp"
+namespace poly {
+namespace internal {
 constexpr bool isprime(int n) {
   if (n <= 2) return n == 2;
   for (int i = 2; i * i <= n; i++)
@@ -34,17 +34,17 @@ constexpr int pmtroot(int p) {
   return -1;
 }
 template <class T>
-constexpr tuple<T, T, T> exgcd(T a, T b) {
+constexpr std::tuple<T, T, T> exgcd(T a, T b) {
   T x1 = 1, y1 = 0, x2 = 0, y2 = 1;
   while (b) {
     auto c = a / b;
-    swap(a, b), b -= c * a;
-    swap(x1, x2), x2 -= c * x1;
-    swap(y1, y2), y2 -= c * y1;
+    std::swap(a, b), b -= c * a;
+    std::swap(x1, x2), x2 -= c * x1;
+    std::swap(y1, y2), y2 -= c * y1;
   }
-  return make_tuple(x1, y1, a);
+  return std::make_tuple(x1, y1, a);
 }
-mt19937 rng{random_device{}()};
+std::mt19937 rng{std::random_device{}()};
 template <class mint>
 mint sqrt(const mint &c) {
   auto euler = [&](const mint &x) -> mint {
@@ -68,6 +68,7 @@ mint sqrt(const mint &c) {
     return r;
   };
   mint ret = qpow({w, 1}, (mint::mod + 1) >> 1).x;
-  return min(raw(ret), raw(-ret));
+  return std::min(raw(ret), raw(-ret));
 }
-};  // namespace poly_internal
+}  // namespace internal
+}  // namespace poly

@@ -1,11 +1,12 @@
 #pragma once
 #include "poly/base.hpp"
-#include "poly/header.h"
 #include "poly/internal_math.hpp"
-template <class mint> vector<mint> wt;
+namespace poly {
+template <class mint>
+vector<mint> wt;
 template <class mint>
 vector<mint>& init(int n) {
-  static constexpr int g = poly_internal::pmtroot(mint::mod);
+  static constexpr int g = internal::pmtroot(mint::mod);
   auto& w = wt<mint>;
   if (w.empty()) w = {1};
   while ((int)w.size() < n) {
@@ -22,8 +23,7 @@ valarray<mint> dif(const vector<mint>& src, int n) {
   auto& w = init<mint>(n);
   valarray<mint> a;
   a.resize(n, 0);
-//copy(src.begin(), src.end(), begin(a));
-  memcpy(&a[0], &src[0], sizeof(mint) * min(n, (int)src.size()));
+  std::memcpy(&a[0], &src[0], sizeof(mint) * std::min(n, (int)src.size()));
   for (int len = n, k = n >> 1; k >= 1; len = k, k >>= 1) {
     for (int i = 0, t = 0; i < n; i += len, t++) {
       for (int j = 0; j < k; j++) {
@@ -51,10 +51,11 @@ auto dit(T&& _src) {
   }
   mint iv = mint{1} / n;
   for (int i = 0; i < n; i++) a[i] *= iv;
-  reverse(a.begin() + 1, a.end());
+  std::reverse(a.begin() + 1, a.end());
   return a;
 }
 template <class Func, class... Ts>
 auto concalc(int len, Func&& func, Ts... args) {
   return dit(func(dif(args, len)...));
 }
+}  // namespace poly

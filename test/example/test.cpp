@@ -1,5 +1,7 @@
 #include "poly/ntt.hpp"
 #include "poly/modint.hpp"
+#include <iostream>
+using namespace poly;
 using mint = modint<998244353>;
 int main() {
   vector<mint> a{1, 2, 3};

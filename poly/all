@@ -1,4 +1,3 @@
-#include "poly/header.h"
 #include "poly/modint.hpp"
 #include "poly/base.hpp"
 #include "poly/arithmetic.hpp"

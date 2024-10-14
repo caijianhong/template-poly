@@ -1,5 +1,8 @@
 #include "poly/modint.hpp"
 #include "poly/getinv.hpp"
+#include <iostream>
+#include <cstdio>
+using namespace poly;
 using mint = modint<998244353>;
 int main() {
   int n;

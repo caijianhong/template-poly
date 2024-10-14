@@ -2,6 +2,7 @@
 #include "poly/internal_math.hpp"
 #include "atcoder/internal_math.hpp"
 using namespace std;
+using namespace poly;
 #ifdef LOCAL
 #define debug(...) fprintf(stderr, ##__VA_ARGS__)
 #else
@@ -13,7 +14,7 @@ int main() {
 #ifndef LOCAL
   cin.tie(nullptr)->sync_with_stdio(false);
 #endif
-  using namespace poly_internal;
+  using namespace poly::internal;
   cout << isprime(10) << endl;
   cout << isprime(11) << endl;
   cout << qpow(9, 2, 10) << endl;

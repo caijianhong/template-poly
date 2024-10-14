@@ -1,8 +1,8 @@
 #pragma once
 #include "poly/getexp.hpp"
 #include "poly/getln.hpp"
-#include "poly/header.h"
 #include "poly/modint.hpp"
+namespace poly {
 template <class mint>
 vector<mint> qpow_base(vector<mint> a, int km, int ke, int lim) {
   assert(a[0] != 0);
@@ -17,7 +17,7 @@ vector<mint> qpow_base(vector<mint> a, int km, int ke, int lim) {
 template <class mint>
 vector<mint> qpow(vector<mint> a, LL k, int lim) {
   int i =
-      find_if(a.begin(), a.end(), [](mint x) { return x != 0; }) - a.begin();
+      std::find_if(a.begin(), a.end(), [](mint x) { return x != 0; }) - a.begin();
   if (i == (int)a.size() || (i >= 1 && (k >= lim || i * k >= lim)))
     return vector<mint>(lim);
   if (i) a.erase(a.begin(), a.begin() + i);
@@ -26,11 +26,11 @@ vector<mint> qpow(vector<mint> a, LL k, int lim) {
   return ret;
 }
 template <class mint>
-vector<mint> qpow(vector<mint> a, string k, int lim) {
+vector<mint> qpow(vector<mint> a, std::string k, int lim) {
   int i =
-      find_if(a.begin(), a.end(), [](mint x) { return x != 0; }) - a.begin();
+      std::find_if(a.begin(), a.end(), [](mint x) { return x != 0; }) - a.begin();
   if (i == (int)a.size() ||
-      (i >= 1 && (k.size() > to_string(lim).size() || i * stoll(k) >= lim)))
+      (i >= 1 && (k.size() > std::to_string(lim).size() || i * stoll(k) >= lim)))
     return vector<mint>(lim);
   if (i) a.erase(a.begin(), a.begin() + i);
   LL km = 0, ke = 0;
@@ -42,3 +42,4 @@ vector<mint> qpow(vector<mint> a, string k, int lim) {
   if (i) ret.insert(ret.begin(), i * stoll(k), 0);
   return ret;
 }
+}  // namespace poly

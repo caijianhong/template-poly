@@ -2,6 +2,7 @@
 #include <cstdio>
 
 using namespace std;
+using namespace poly;
 
 using mint = modint<11>;
 int main() {

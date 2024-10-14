@@ -1,9 +1,9 @@
 #pragma once
 #include "poly/getinv.hpp"
-#include "poly/header.h"
 #include "poly/multiple.hpp"
 #include "poly/ntt.hpp"
 #include "poly/plusminus.hpp"
+namespace poly {
 template <class mint>
 vector<mint> operator/(vector<mint> a, vector<mint> b) {
   if (a.size() < b.size()) return {};
@@ -18,3 +18,4 @@ template <class mint>
 vector<mint> operator%(const vector<mint>& a, const vector<mint>& b) {
   return cut(a - (a / b) * b, b.size() - 1);
 }
+}  // namespace poly

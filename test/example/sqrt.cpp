@@ -2,6 +2,7 @@
 #include "poly/modint.hpp"
 #include "poly/getsqrt.hpp"
 using namespace std;
+using namespace poly;
 using mint = modint<998244353>;
 using poly = vector<mint>;
 int main() {
