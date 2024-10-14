@@ -43,8 +43,6 @@ class Expander:
     def find_acl(self, acl_name: str) -> Path:
         for lib_path in self.lib_paths:
             path = lib_path / "poly" / acl_name
-            logger.info(lib_path)
-            logger.info(path)
             if path.exists():
                 return path
         logger.error("cannot find: {}".format(acl_name))
