@@ -31,7 +31,7 @@ mint sqrt(const mint &c) {
   return std::min(raw(ret), raw(-ret));
 }
 template <class mint>
-vector<mint> getSqrt(const vector<mint>& a, int lim) {
+vector<mint> getSqrt(const vector<mint> &a, int lim) {
   vector<mint> b{sqrt(a[0])};
   for (int len = 2; len <= glim(lim); len <<= 1) {
     vector<mint> c(a.begin(), a.begin() + std::min(len, (int)a.size()));
