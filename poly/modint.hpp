@@ -13,7 +13,7 @@ struct modint {
   modint operator+() const { return *this; }
   modint operator-() const { return modint::raw(v ? mod - v : 0); }
   friend int raw(const modint &self) { return self.v; }
-  static modint raw(int _y) { mint x; x.v = _y; return x; }
+  static modint raw(int _y) { modint x; x.v = _y; return x; }
   friend std::ostream &operator<<(std::ostream &os, const modint &self) {
     return os << raw(self);
   }
