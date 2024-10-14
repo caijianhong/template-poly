@@ -1,13 +1,13 @@
 #pragma once
 namespace poly {
 template <class mint>
-vector<mint> operator+=(vector<mint>& a, const vector<mint>& b) {
+vector<mint>& operator+=(vector<mint>& a, const vector<mint>& b) {
   if (a.size() < b.size()) a.resize(b.size());
   for (int i = 0; i < (int)b.size(); i++) a[i] += b[i];
   return a;
 }
 template <class mint>
-vector<mint> operator-=(vector<mint>& a, const vector<mint>& b) {
+vector<mint>& operator-=(vector<mint>& a, const vector<mint>& b) {
   if (a.size() < b.size()) a.resize(b.size());
   for (int i = 0; i < (int)b.size(); i++) a[i] -= b[i];
   return a;
