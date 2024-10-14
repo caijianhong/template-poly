@@ -7,7 +7,7 @@ struct modint {
   unsigned v;
   modint() = default;
   template <class T, enable_if_t<is_integral<T>::value, int> = 0>
-    modint(const T& _y) : v(_y % mod + (is_signed<T>() && _y < 0 ? mod : 0)) {}
+    modint(const T& _y) : v((unsigned)(_y % mod + (is_signed<T>() && _y < 0 ? mod : 0))) {}
   modint operator+() const { return *this; }
   modint operator-() const { return modint() - *this; }
   friend int raw(const modint &self) { return self.v; }
@@ -29,24 +29,23 @@ struct modint {
     return *this;
   }
   modint &operator/=(const modint &rhs) {
-    int v = rhs.v;
-    assert(v > 0);
+    int x = rhs.v;
+    assert(x > 0);
     if (poly_internal::isprime(mod)) {
       static constexpr int lim = 1 << 21;
       static vector<modint> inv{0, 1};
-      while (v >= lim) *this *= mod - mod / v, v = mod % v;
-      while (v >= (int)inv.size()) {
+      while (x >= lim) *this *= mod - mod / x, x = mod % x;
+      while (x >= (int)inv.size()) {
         int m = (int)inv.size();
         inv.resize(m << 1);
         for (int i = m; i < m << 1; i++) inv[i] = (mod - mod / i) * inv[mod % i];
       }
-      v = raw(inv[v]);
+      return *this *= inv[x];
     } else {
-      auto ret = poly_internal::exgcd(v, mod);
+      auto ret = poly_internal::exgcd(x, mod);
       assert(get<2>(ret) == 1);
-      v = get<0>(ret);
+      return *this *= get<0>(ret);
     }
-    return *this *= v;
   }
   friend modint qpow(modint a, LL b) {
     if (b < 0) b = -b, a = 1 / a;
