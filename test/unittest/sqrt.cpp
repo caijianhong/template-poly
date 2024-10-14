@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
-#include "modint.hpp"
-#include "getsqrt.hpp"
+#include "poly/modint.hpp"
+#include "poly/getsqrt.hpp"
 using namespace std;
 using mint = modint<998244353>;
 using poly = vector<mint>;

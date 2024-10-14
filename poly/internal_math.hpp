@@ -31,6 +31,7 @@ constexpr int pmtroot(int p) {
       flag &= qpow(g, (p - 1) / dvs[i], p) != 1;
     if (flag) return g;
   }
+  return -1;
 }
 template <class T>
 constexpr tuple<T, T, T> exgcd(T a, T b) {

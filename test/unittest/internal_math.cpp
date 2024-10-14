@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "internal_math.hpp"
+#include "poly/internal_math.hpp"
 #include "atcoder/internal_math.hpp"
 using namespace std;
 #ifdef LOCAL
@@ -18,13 +18,8 @@ int main() {
   cout << isprime(11) << endl;
   cout << qpow(9, 2, 10) << endl;
   cout << isprime(998244353) << endl;
-  for (int p : {2, 
-167772161,
-469762049,
-754974721,
-998244353}) 
-  assert(pmtroot(p) ==
-  atcoder::internal::primitive_root_constexpr(p));
+  for (int p : {2, 167772161, 469762049, 754974721, 998244353}) 
+    assert(pmtroot(p) == atcoder::internal::primitive_root_constexpr(p));
   return 0;
 }
 

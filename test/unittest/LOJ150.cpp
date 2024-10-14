@@ -1,4 +1,4 @@
-#include "all"
+#include "poly/all"
 using namespace std;
 int main() {
 #ifndef LOCAL
