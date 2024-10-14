@@ -18,8 +18,10 @@ vector<mint>& init(int n) {
 }
 template <class mint>
 valarray<mint> dif(const vector<mint>& src, int n) {
+  assert((n & (n - 1)) == 0);
   auto& w = init<mint>(n);
-  valarray<mint> a(0, n);
+  valarray<mint> a;
+  a.resize(n, 0);
   copy(src.begin(), src.end(), begin(a));
   for (int len = n, k = n >> 1; k >= 1; len = k, k >>= 1) {
     for (int i = 0, t = 0; i < n; i += len, t++) {

@@ -52,5 +52,12 @@ int main() {
     // get mod
     assert(mint::mod == 11);
     assert(5 * (modint<12>{1} / 5) == 1);
+
+    mt19937 rng{random_device{}()};
+    for (int t = 1; t <= 100; t++) {
+      using modi = modint<998244353>;
+      int x = rng();
+      assert((modi{1} / x) * modi{x} == 1);
+    }
 }
 
