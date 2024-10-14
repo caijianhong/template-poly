@@ -11,9 +11,9 @@ struct modint {
   modint(const T &_y)
       : v((unsigned)(_y % mod + (std::is_signed<T>() && _y < 0 ? mod : 0))) {}
   modint operator+() const { return *this; }
-  modint operator-() const { return modint() - *this; }
+  modint operator-() const { return modint::raw(v ? mod - v : 0); }
   friend int raw(const modint &self) { return self.v; }
-  static mint rac(int _y) { mint x; x.v = _y; return x; }
+  static modint raw(int _y) { mint x; x.v = _y; return x; }
   friend std::ostream &operator<<(std::ostream &os, const modint &self) {
     return os << raw(self);
   }
