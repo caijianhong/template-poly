@@ -1,9 +1,9 @@
 #pragma once
-#include "base.hpp"
-#include "getdevint.hpp"
-#include "getln.hpp"
-#include "header.h"
-#include "ntt.hpp"
+#include "poly/base.hpp"
+#include "poly/getdevint.hpp"
+#include "poly/getln.hpp"
+#include "poly/header.h"
+#include "poly/ntt.hpp"
 template <class mint>
 vector<mint> getExp(const vector<mint>& a, int lim) {
   assert(a[0] == 0);

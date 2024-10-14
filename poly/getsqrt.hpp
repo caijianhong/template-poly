@@ -1,11 +1,11 @@
 #pragma once
-#include "base.hpp"
-#include "header.h"
-#include "ntt.hpp"
-#include "getinv.hpp"
-#include "multiple.hpp"
-#include "plusminus.hpp"
-#include "internal_math.hpp"
+#include "poly/base.hpp"
+#include "poly/header.h"
+#include "poly/ntt.hpp"
+#include "poly/getinv.hpp"
+#include "poly/multiple.hpp"
+#include "poly/plusminus.hpp"
+#include "poly/internal_math.hpp"
 template <class mint>
 vector<mint> getSqrt(const vector<mint>& a, int lim) {
   vector<mint> b{poly_internal::sqrt(a[0])};

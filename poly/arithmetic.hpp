@@ -1,13 +1,13 @@
 #pragma once
-#include "header.h"
+#include "poly/header.h"
 // + - * / %
-#include "divide.hpp"
-#include "getinv.hpp"
-#include "multiple.hpp"
-#include "plusminus.hpp"
+#include "poly/divide.hpp"
+#include "poly/getinv.hpp"
+#include "poly/multiple.hpp"
+#include "poly/plusminus.hpp"
 // ln, exp, qpow
-#include "getdevint.hpp"
-#include "getln.hpp"
-#include "getexp.hpp"
-#include "qpow.hpp"
-#include "getsqrt.hpp"
+#include "poly/getdevint.hpp"
+#include "poly/getln.hpp"
+#include "poly/getexp.hpp"
+#include "poly/qpow.hpp"
+#include "poly/getsqrt.hpp"

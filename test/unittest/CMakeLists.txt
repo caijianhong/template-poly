@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 project(PolyLibrary)
 
+
 if(NOT "${CMAKE_CXX_STANDARD}")
   set(CMAKE_CXX_STANDARD 14)
 endif()
@@ -30,3 +31,6 @@ add_executable(modint modint.cpp)
 
 add_executable(internal_math internal_math.cpp)
 
+add_executable(multiple multiple.cpp)
+target_link_libraries(multiple gtest gtest_main)
+gtest_discover_tests(multiple)

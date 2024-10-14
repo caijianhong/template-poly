@@ -1,8 +1,8 @@
 #pragma once
-#include "getexp.hpp"
-#include "getln.hpp"
-#include "header.h"
-#include "modint.hpp"
+#include "poly/getexp.hpp"
+#include "poly/getln.hpp"
+#include "poly/header.h"
+#include "poly/modint.hpp"
 template <class mint>
 vector<mint> qpow_base(vector<mint> a, int km, int ke, int lim) {
   assert(a[0] != 0);

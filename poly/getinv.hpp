@@ -1,6 +1,6 @@
 #pragma once
-#include "header.h"
-#include "ntt.hpp"
+#include "poly/header.h"
+#include "poly/ntt.hpp"
 template <class mint>
 vector<mint> getInv(const vector<mint>& a, int lim) {
   vector<mint> b{1 / a[0]};

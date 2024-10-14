@@ -1,9 +1,9 @@
 #pragma once
-#include "getinv.hpp"
-#include "header.h"
-#include "multiple.hpp"
-#include "ntt.hpp"
-#include "plusminus.hpp"
+#include "poly/getinv.hpp"
+#include "poly/header.h"
+#include "poly/multiple.hpp"
+#include "poly/ntt.hpp"
+#include "poly/plusminus.hpp"
 template <class mint>
 vector<mint> operator/(vector<mint> a, vector<mint> b) {
   if (a.size() < b.size()) return {};

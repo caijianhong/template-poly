@@ -16,7 +16,7 @@ logger = getLogger(__name__)  # type: Logger
 class Expander:
     atcoder_include = re.compile(
         # '#include\s*["<](atcoder/[a-z_]*(|.hpp))[">]\s*')
-        r'#include\s*["<]([a-z_0-9]*(|.hpp)|header.h)[">]\s*'
+        r'#include\s*["<]poly/([a-z_0-9]*(|.hpp)|header.h)[">]\s*'
     )
     std_include = re.compile(
         r'#include\s*["<]([a-z]*|bits/stdc\+\+.h)[">]\s*|\s*using\s*namespace\s*std\s*;\s*'
@@ -42,7 +42,9 @@ class Expander:
 
     def find_acl(self, acl_name: str) -> Path:
         for lib_path in self.lib_paths:
-            path = lib_path / acl_name
+            path = lib_path / "poly" / acl_name
+            logger.info(lib_path)
+            logger.info(path)
             if path.exists():
                 return path
         logger.error("cannot find: {}".format(acl_name))

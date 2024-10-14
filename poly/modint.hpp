@@ -1,6 +1,6 @@
 #pragma once
-#include "header.h"
-#include "internal_math.hpp"
+#include "poly/header.h"
+#include "poly/internal_math.hpp"
 template <unsigned umod>
 struct modint {
   static constexpr int mod = umod;

@@ -1,7 +1,7 @@
 #pragma once
-#include "base.hpp"
-#include "header.h"
-#include "internal_math.hpp"
+#include "poly/base.hpp"
+#include "poly/header.h"
+#include "poly/internal_math.hpp"
 template <class mint> vector<mint> wt;
 template <class mint>
 vector<mint>& init(int n) {
@@ -9,7 +9,7 @@ vector<mint>& init(int n) {
   auto& w = wt<mint>;
   if (w.empty()) w = {1};
   while ((int)w.size() < n) {
-    int m = w.size();
+    int m = (int)w.size();
     mint wn = qpow(mint(g), (mint::mod - 1) / m >> 2);
     w.resize(m << 1);
     for (int i = m; i < m << 1; i++) w[i] = wn * w[i ^ m];
@@ -32,7 +32,7 @@ valarray<mint> dif(const vector<mint>& src, int n) {
   return a;
 }
 template <class T>
-auto dit(T&& _src, int m) {
+auto dit(T&& _src) {
   using mint = typename T::value_type;
   valarray<mint> src = _src;
   int n = (int)src.size();
@@ -46,13 +46,12 @@ auto dit(T&& _src, int m) {
       }
     }
   }
-  mint iv = mint(1) / n;
+  mint iv = mint{1} / n;
   for (int i = 0; i < n; i++) a[i] *= iv;
   reverse(a.begin() + 1, a.end());
-  a.resize(m);
   return a;
 }
 template <class Func, class... Ts>
 auto concalc(int len, Func&& func, Ts... args) {
-  return dit(func(dif(args, len)...), len);
+  return dit(func(dif(args, len)...));
 }
