@@ -3,6 +3,7 @@
 #include "poly/getln.hpp"
 #include "poly/modint.hpp"
 namespace poly {
+namespace internal {
 template <class mint>
 vector<mint> qpow_base(vector<mint> a, int km, int ke, int lim) {
   assert(a[0] != 0);
@@ -14,6 +15,7 @@ vector<mint> qpow_base(vector<mint> a, int km, int ke, int lim) {
   for (int i = 0; i < lim; i++) a[i] *= coek;
   return a;
 }
+}  // namespace internal
 template <class mint>
 vector<mint> qpow(vector<mint> a, LL k, int lim) {
   auto chk = [](mint x) { return x != 0; };
@@ -21,7 +23,7 @@ vector<mint> qpow(vector<mint> a, LL k, int lim) {
   if (i == (int)a.size() || (i >= 1 && (k >= lim || i * k >= lim)))
     return vector<mint>(lim, 0);
   if (i) a.erase(a.begin(), a.begin() + i);
-  auto ret = qpow_base(a, k % mint::mod, k % (mint::mod - 1), lim);
+  auto ret = internal::qpow_base(a, k % mint::mod, k % (mint::mod - 1), lim);
   if (i) ret.insert(ret.begin(), i * k, 0);
   return ret;
 }
@@ -38,7 +40,7 @@ vector<mint> qpow(vector<mint> a, std::string k, int lim) {
     km = (km * 10 + ch - '0') % mint::mod;
     ke = (ke * 10 + ch - '0') % (mint::mod - 1);
   }
-  auto ret = qpow_base(a, (int)km, (int)ke, lim);
+  auto ret = internal::qpow_base(a, (int)km, (int)ke, lim);
   if (i) ret.insert(ret.begin(), i * stoll(k), 0);
   return ret;
 }
