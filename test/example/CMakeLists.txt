@@ -27,5 +27,5 @@ add_executable(LOJ150 LOJ150.cpp)
 
 add_executable(multiple multiple.cpp)
 
-add_executable(test test.cpp)
+add_executable(getexp getexp.cpp)
 
