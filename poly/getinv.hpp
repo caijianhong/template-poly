@@ -6,8 +6,12 @@ vector<mint> getInv(const vector<mint>& a, int lim) {
   vector<mint> b{1 / a[0]};
   for (int len = 2; len <= glim(lim); len <<= 1) {
     vector<mint> c(a.begin(), a.begin() + min(len, (int)a.size()));
-    auto func = [&](auto&& vb, auto&& vc) { return vb * (2 - vc * vb); };
-    b = cut(concalc(len << 1, func, b, c), len);
+    auto difb = dif(b, len);
+    c = dit(dif(c, len) * difb);
+    for (int i = 0; i < len >> 1; i++) c[i] = 0;
+    c = dit(dif(c, len) * difb);
+    b.resize(len);
+    for (int i = len >> 1; i < len; i++) b[i] = -c[i];
   }
   return cut(b, lim);
 }
