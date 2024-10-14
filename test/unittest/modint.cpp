@@ -60,5 +60,9 @@ int main() {
       int x = rng();
       assert((modi{1} / x) * modi{x} == 1);
     }
+    
+    mint x = mint::raw(10);
+    assert(x == 10);
+    assert(x + (-x) == 0);
 }
 
