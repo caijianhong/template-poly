@@ -16,7 +16,7 @@ logger = getLogger(__name__)  # type: Logger
 class Expander:
     atcoder_include = re.compile(
         # '#include\s*["<](atcoder/[a-z_]*(|.hpp))[">]\s*')
-        r'#include\s*["<]poly/([a-z_0-9]*(|.hpp)|header.h)[">]\s*'
+        r'#include\s*["<]poly/([a-z_0-9A-Z]*(|.hpp)|header.h)[">]\s*'
     )
     std_include = re.compile(
         r'#include\s*["<]([a-z]*|bits/stdc\+\+.h)[">]\s*|\s*using\s*namespace\s*std\s*;\s*'

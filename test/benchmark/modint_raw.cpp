@@ -12,7 +12,7 @@ void mint_construct_const1(benchmark::State& state) {
 BENCHMARK(mint_construct_const1);
 void mint_construct_const2(benchmark::State& state) {
   for (auto _ : state) {
-    mint x = mint::raw(1);
+    mint x = mint::rac(1);
     benchmark::DoNotOptimize(x);
   }
 }
@@ -27,7 +27,7 @@ void mint_construct_const3(benchmark::State& state) {
 BENCHMARK(mint_construct_const3);
 void mint_construct_const4(benchmark::State& state) {
   for (auto _ : state) {
-    mint&& x = mint::raw(1);
+    mint&& x = mint::rac(1);
     benchmark::DoNotOptimize(x);
   }
 }
@@ -47,7 +47,7 @@ BENCHMARK(mint_rndruct_rnd1);
 void mint_rndruct_rnd2(benchmark::State& state) {
   int y = rng() % mint::mod;
   for (auto _ : state) {
-    mint x = mint::raw(y);
+    mint x = mint::rac(y);
     benchmark::DoNotOptimize(x);
   }
 }
@@ -64,7 +64,7 @@ BENCHMARK(mint_rndruct_rnd3);
 void mint_rndruct_rnd4(benchmark::State& state) {
   int y = rng() % mint::mod;
   for (auto _ : state) {
-    mint&& x = mint::raw(y);
+    mint&& x = mint::rac(y);
     benchmark::DoNotOptimize(x);
   }
 }
@@ -80,7 +80,7 @@ BENCHMARK(mint_rndruct_1);
 void mint_rndruct_2(benchmark::State& state) {
   int y = rng();
   for (auto _ : state) {
-    mint x = mint::raw(y % mint::mod);
+    mint x = mint::rac(y % mint::mod);
     benchmark::DoNotOptimize(x);
   }
 }
@@ -97,7 +97,7 @@ BENCHMARK(mint_rndruct_3);
 void mint_rndruct_4(benchmark::State& state) {
   int y = rng();
   for (auto _ : state) {
-    mint&& x = mint::raw(y % mint::mod);
+    mint&& x = mint::rac(y % mint::mod);
     benchmark::DoNotOptimize(x);
   }
 }
@@ -114,7 +114,7 @@ BENCHMARK(mint_rndruct_ll1);
 void mint_rndruct_ll2(benchmark::State& state) {
   unsigned long long y = rnd();
   for (auto _ : state) {
-    mint x = mint::raw(y % mint::mod);
+    mint x = mint::rac(y % mint::mod);
     benchmark::DoNotOptimize(x);
   }
 }
@@ -131,7 +131,7 @@ BENCHMARK(mint_rndruct_ll3);
 void mint_rndruct_ll4(benchmark::State& state) {
 unsigned   long long y = rnd();
   for (auto _ : state) {
-    mint&& x = mint::raw(y % mint::mod);
+    mint&& x = mint::rac(y % mint::mod);
     benchmark::DoNotOptimize(x);
   }
 }
