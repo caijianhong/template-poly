@@ -1,5 +1,7 @@
 #pragma once
 #include "poly/base.hpp"
+#include "poly/multiple.hpp"
+#include "poly/plusminus.hpp"
 namespace poly {
 namespace internal {
 template <class mint>
