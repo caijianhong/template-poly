@@ -22,13 +22,9 @@ include_directories(.)
 include_directories(../../)
 
 add_executable(getinv getinv.cpp)
-
 add_executable(LOJ150 LOJ150.cpp)
-
 add_executable(multiple multiple.cpp)
-
 add_executable(getexp getexp.cpp)
-
 add_executable(test test.cpp)
-
 add_executable(linear_rec linear_rec.cpp)
+add_executable(divide divide.cpp)
