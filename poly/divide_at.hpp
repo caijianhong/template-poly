@@ -8,10 +8,11 @@ mint divide_at(vector<mint> f, vector<mint> g, LL n) {
     auto r = g;
     for (int i = 1; i < (int)r.size(); i += 2) r[i] *= -1;
     f *= r, g *= r;
-    for (int i = n & 1; i < (int)f.size(); i += 2) f[i >> 1] = f[i];
-    f.resize((f.size() + 1) >> 1);
-    for (int i = 0; i < (int)g.size(); i += 2) g[i >> 1] = g[i];
-    g.resize((g.size() + 1) >> 1);
+    int lst = -1;
+    for (int i = n & 1; i < (int)f.size(); i += 2) f[lst = i >> 1] = f[i];
+    f.resize(lst + 1);
+    for (int i = 0; i < (int)g.size(); i += 2) g[lst = i >> 1] = g[i];
+    g.resize(lst + 1);
   }
   return f.empty() ? 0 : f[0] / g[0];
 }
